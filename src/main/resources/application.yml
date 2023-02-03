@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: reversion
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: testUser
+    url: jdbc:mysql://localhost:3306/test?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC
+    password: '0000'
+  jpa:
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    show-sql: 'true'
+
+  mvc:
+    view:
+      prefix: /WEB-INF/views/
+      suffix: .jsp
+  thymeleaf:
+    cache: 'false'
+
+mybatis:
+  mapper-locations: mybatis-mapper/*.xml
+  type-aliases-package: com.example.reversion.model
+
+
+server:
+  port: '8080'
