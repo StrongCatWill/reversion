@@ -1,3 +1,9 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page import="com.example.reversion.model.Member" %>
+<%@ page import="com.example.reversion.service.MemberService" %>
+
+<%@ page import="java.util.List" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%--
   Created by IntelliJ IDEA.
   User: ssy
@@ -5,29 +11,66 @@
   Time: 오후 2:08
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
 <html>
 <head>
-    <title>Hello World in JSP</title>
+    <title>test</title>
 </head>
 <body>
-    <h1>Demo Page__test.jsp</h1>
-    <h2>html example</h2>
 
-    <p>hello world</p>
-    <p>hello
-        world
-    </p>
-    <p>hello<br>world</p>
-    <pre>
-            hello world
-            hello
-                world
-        </pre>
-        <pre>
-            <h2>hello
-                    world
-            </h2>
-        </pre>
+<h1>Demo Page__test.jsp</h1>
+
+
+<table width="100%" border="1">
+    <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>CreateDate</th>
+    </tr>
+    <c:forEach var="post" items="${posts}">
+        <tr>
+            <td>${post.id}</td>
+            <td><a href="/post/${post.id}">${post.title}</a></td>
+            <td>${post.createDate}</td>
+        </tr>
+    </c:forEach>
+
+    <%
+        MemberService dao = new MemberService();
+        List<Member>list = (List<Member>) dao.getMember();
+
+        for(Member dto:list){
+    %>
+    <tr>
+        <td><%=dto.getId()%></td>
+        <td><%=dto.getName()%></td>
+        <td><%=dto.getAge()%></td>
+        <td><%=dto.getPNum()%></td>
+    </tr>
+    <%
+        }
+    %>
+    </tbody>
+</table>
+
+
+<%--
+    <tbody>
+
+
+    <%--
+    <c:forEach var="result" items="${memberList}" varStatus="status">
+    <tr>
+        <td><t:out value="${result.id}"/></td>
+        <td><t:out value="${result.name}"/> </td>
+        <td><t:out value="${result.age}"/> </td>
+        <td><t:out value="${result.PNum}"/> </td>
+    </tr>
+    </c:forEach>
+
+    </tbody>
+--%>
+
 </body>
 </html>
+

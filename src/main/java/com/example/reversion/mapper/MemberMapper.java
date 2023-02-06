@@ -1,4 +1,4 @@
-package com.example.reversion.service;
+package com.example.reversion.mapper;
 
 import com.example.reversion.model.Member;
 import org.apache.ibatis.annotations.Mapper;

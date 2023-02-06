@@ -1,5 +1,6 @@
 package com.example.reversion.service;
 
+import com.example.reversion.mapper.MemberMapper;
 import com.example.reversion.model.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
