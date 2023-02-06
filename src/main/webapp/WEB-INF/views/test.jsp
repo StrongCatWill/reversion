@@ -35,12 +35,27 @@
         </tr>
     </thead>
     <tbody>
+
+     <%--단일 리스트 내보내기
+        <tr>
+            <td><c:out value="${member.id}"></c:out></td>
+            <td><c:out value="${member.name}"></c:out></td>
+            <td><c:out value="${member.age}"></c:out></td>
+            <td><c:out value="${member.PNum}"></c:out></td>
+        </tr>--%>
+
+
+
+    <c:forEach var="member" items="${members}">
         <tr>
             <td><c:out value="${member.id}"></c:out></td>
             <td><c:out value="${member.name}"></c:out></td>
             <td><c:out value="${member.age}"></c:out></td>
             <td><c:out value="${member.PNum}"></c:out></td>
         </tr>
+    </c:forEach>
+
+
     </tbody>
 </table>
 
