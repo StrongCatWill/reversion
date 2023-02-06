@@ -3,6 +3,10 @@
 <%@ page import="com.example.reversion.service.MemberService" %>
 
 <%@ page import="java.util.List" %>
+<%@ page import="java.sql.PreparedStatement" %>
+<%@ page import="java.sql.ResultSet" %>
+<%@ page import="java.sql.Connection" %>
+<%@ page import="java.sql.DriverManager" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%--
   Created by IntelliJ IDEA.
@@ -22,54 +26,26 @@
 
 
 <table width="100%" border="1">
-    <tr>
-        <th>ID</th>
-        <th>Title</th>
-        <th>CreateDate</th>
-    </tr>
-    <c:forEach var="post" items="${posts}">
+    <thead>
         <tr>
-            <td>${post.id}</td>
-            <td><a href="/post/${post.id}">${post.title}</a></td>
-            <td>${post.createDate}</td>
+            <th>ID</th>
+            <th>name</th>
+            <th>age</th>
+            <th>전화번호</th>
         </tr>
-    </c:forEach>
-
-    <%
-        MemberService dao = new MemberService();
-        List<Member>list = (List<Member>) dao.getMember();
-
-        for(Member dto:list){
-    %>
-    <tr>
-        <td><%=dto.getId()%></td>
-        <td><%=dto.getName()%></td>
-        <td><%=dto.getAge()%></td>
-        <td><%=dto.getPNum()%></td>
-    </tr>
-    <%
-        }
-    %>
+    </thead>
+    <tbody>
+        <tr>
+            <td><c:out value="${member.id}"></c:out></td>
+            <td><c:out value="${member.name}"></c:out></td>
+            <td><c:out value="${member.age}"></c:out></td>
+            <td><c:out value="${member.PNum}"></c:out></td>
+        </tr>
     </tbody>
 </table>
 
 
-<%--
-    <tbody>
 
-
-    <%--
-    <c:forEach var="result" items="${memberList}" varStatus="status">
-    <tr>
-        <td><t:out value="${result.id}"/></td>
-        <td><t:out value="${result.name}"/> </td>
-        <td><t:out value="${result.age}"/> </td>
-        <td><t:out value="${result.PNum}"/> </td>
-    </tr>
-    </c:forEach>
-
-    </tbody>
---%>
 
 </body>
 </html>

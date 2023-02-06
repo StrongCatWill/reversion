@@ -14,6 +14,7 @@ public class MemberService {
     private final MemberMapper memberMapper;
 
     public List<Member> getMemberList(){
+
         return memberMapper.getMemberList();
     }
 
