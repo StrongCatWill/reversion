@@ -12,16 +12,16 @@
     </select>
 
     <insert id="createMember">
-        insert into member(name, id) values(#{name}, #{id})
+        insert into test_for_testuser(id, name, age, phone) values(#{id}, #{name}, #{age}, #{phone})
     </insert>
 
     <delete id="deleteMember">
-        delete from member
+        delete from test_for_testuser
         where id = #{id}
     </delete>
 
     <update id="updateMember">
-        update member set name = #{name}
+        update test_for_testuser set name = #{name}
         where id = #{id}
     </update>
 </mapper>

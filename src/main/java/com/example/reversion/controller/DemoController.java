@@ -19,57 +19,44 @@ public class DemoController {
     private final MemberService memberService;
 
     @GetMapping("/test")
-    public ModelAndView test(){
+    public ModelAndView test(HttpServletRequest httpServletRequest, Model model){
 
-        Member member = memberService.getMember();
+
+        //---------------DB에 있는 값 뿌려주는 부분---------------------
+
         ModelAndView mav = new ModelAndView("test");
 
-        /*List<Member>memberList = memberService.getMemberList();
-        for(int i=1; i<memberList.size();i++){
-            mav.addObject("member", memberList);
-        }*/
-
-        List<Member> memberList1 = memberService.getMemberList();
-        mav.addObject("members", memberList1);
-
-        /* 40라인과 같은 것.
-        for( int i = 0 ; i < memberList1.size(); i++){
-           Member item = memberList1.get(i);
-           System.out.print(item.getName());
-        }
-        */
-        for(Member item : memberList1){
-            System.out.print(item.getName());
-        }
+        extracted(mav);
 
 
         return mav;
     }
 
-    @GetMapping("/test/submit")
-    public String submit(HttpServletRequest httpServletRequest, Model model){
-
-        String id = httpServletRequest.getParameter("Id");
-        String name = httpServletRequest.getParameter("name");
-        String age = httpServletRequest.getParameter("age");
-        String pNum = httpServletRequest.getParameter("pNum");
-
-        model.addAttribute("Id", id);
-        model.addAttribute("name", name);
-        model.addAttribute("age", age);
-        model.addAttribute("pNum", pNum);
-
-        System.out.println(id+name+age+pNum);
-
-
-        Member member = memberService.getMember();
-        ModelAndView mav = new ModelAndView("submit");
-        return "submit";
-
+    private void extracted(ModelAndView mav) {
+        List<Member> memberList = memberService.getMemberList();
+        mav.addObject("members", memberList);
     }
 
+    @PostMapping("/test")
+    public ModelAndView testInsert(HttpServletRequest httpServletRequest,
+                                   @RequestParam Integer id,
+                                   @RequestParam String name,
+                                   @RequestParam Integer age,
+                                   @RequestParam Integer phone,
+                                   Model model){
 
+        ModelAndView mav = new ModelAndView("test");
 
-    
+        try{
+            Member member = memberService.createMember(id, name, age, phone);
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            System.out.println("ID:" + id +"name: "+name + "age: "+age + "phone: "+phone);
+        }
 
+        extracted(mav);
+        //이 위의 try-catch문은 update에 관한 것이므로 전체 controller가 반환하는 값은 저 블록 밖에 위치해야 함.
+        return mav;
+    }
 }

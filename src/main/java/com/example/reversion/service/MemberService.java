@@ -1,9 +1,11 @@
 package com.example.reversion.service;
 
+import com.example.reversion.controller.DemoController;
 import com.example.reversion.mapper.MemberMapper;
 import com.example.reversion.model.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 
@@ -22,11 +24,19 @@ public class MemberService {
         return memberMapper.getMember();
     }
 
-    public int createMember(Member member) {
+    public Member createMember(Integer id, String name, Integer age, Integer phone) {
+
+        Member member = new Member();
+
+        member.setId(id);
+        member.setName(name);
+        member.setAge(age);
+        member.setPhone(phone);
+
         return memberMapper.createMember(member);
     }
 
-    public int updateMember(Member member) {
+    public Member updateMember(Member member) {
         return memberMapper.updateMember(member);
     }
 

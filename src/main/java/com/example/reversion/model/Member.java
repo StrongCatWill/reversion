@@ -7,9 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class Member {
 
     private int id;
@@ -18,5 +15,5 @@ public class Member {
 
     private int age;
 
-    private int pNum;
+    private int phone;
 }
