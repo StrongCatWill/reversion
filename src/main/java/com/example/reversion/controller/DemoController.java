@@ -4,10 +4,11 @@ import com.example.reversion.model.Member;
 import com.example.reversion.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.Collection;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 
@@ -44,6 +45,29 @@ public class DemoController {
 
         return mav;
     }
+
+    @GetMapping("/test/submit")
+    public String submit(HttpServletRequest httpServletRequest, Model model){
+
+        String id = httpServletRequest.getParameter("Id");
+        String name = httpServletRequest.getParameter("name");
+        String age = httpServletRequest.getParameter("age");
+        String pNum = httpServletRequest.getParameter("pNum");
+
+        model.addAttribute("Id", id);
+        model.addAttribute("name", name);
+        model.addAttribute("age", age);
+        model.addAttribute("pNum", pNum);
+
+        System.out.println(id+name+age+pNum);
+
+
+        Member member = memberService.getMember();
+        ModelAndView mav = new ModelAndView("submit");
+        return "submit";
+
+    }
+
 
 
     
