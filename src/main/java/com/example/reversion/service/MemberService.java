@@ -21,6 +21,7 @@ public class MemberService {
     }
 
     public Member getMember() {
+
         return memberMapper.getMember();
     }
 
@@ -36,11 +37,21 @@ public class MemberService {
         return memberMapper.createMember(member);
     }
 
-    public Member updateMember(Member member) {
+/*    업데이트 하는 자리*/
+    public Member updateMember(Integer id, String name, Integer age, Integer phone) {
+
+        Member member = new Member();
+
+        member.setId(id);
+        member.setName(name);
+        member.setAge(age);
+        member.setPhone(phone);
+
         return memberMapper.updateMember(member);
     }
 
     public int deleteMember(int id) {
+
         return memberMapper.deleteMember(id);
     }
 }
