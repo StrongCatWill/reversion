@@ -44,14 +44,14 @@
 </ul>
 --%>
 
-<li> 선택된 사용자의 ID : <c:out value="${member.id}"></c:out></li>
-<li> 선택된 사용자의 이름 : <c:out value="${member.name}"></c:out></li>
-<li> 선택된 사용자의 나이 : <c:out value="${member.age}"></c:out></li>
-<li> 선택된 사용자의 전화번호 : <c:out value="${member.phone}"></c:out></li>
+<li>  사용자의 ID : <c:out value="${member.id}"></c:out></li>
+<li>  사용자의 이름 : <c:out value="${member.name}"></c:out></li>
+<li>  사용자의 나이 : <c:out value="${member.age}"></c:out></li>
+<li>  사용자의 전화번호 : <c:out value="${member.phone}"></c:out></li>
 
 
-<button type="button" onclick="location.href='http://localhost:8080/list'">리스트 페이지로 이동</button>
-<button type="button" onclick="location.href='http://localhost:8080/modify'">수정 페이지로 이동</button>
+<button type="button" onclick="location.href='http://localhost:8080/modify?id=${member.id}&name=${member.name}&age=${member.age}&phone=${member.phone}'">수정 페이지로 이동</button>
+<button type="button" onclick="location.href='http://localhost:8080/list'">목록 페이지로 이동</button>
 
 </body>
 </html>

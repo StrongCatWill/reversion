@@ -43,6 +43,7 @@
                 아이디 : <input type="text" name="id"><br>
                 이름 : <input type="text" name="name"><br>
                 나이 : <input type="text" name="age"><br>
+
                 전화번호 : <input type="text" name="phone"><br>
             <button type="submit" onclick="" value="저장" id="submit">저장</button><br><br>
             <input type="reset" value="목록" onclick="location.href='http://localhost:8080/list'">

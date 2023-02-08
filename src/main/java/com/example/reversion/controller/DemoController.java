@@ -19,7 +19,7 @@ public class DemoController {
     private final MemberService memberService;
 
     @GetMapping("/list")
-    public ModelAndView test(HttpServletRequest httpServletRequest, Model model){
+    public ModelAndView test(){
 
 
         //---------------메인 루트가 되는 부분---------------------
@@ -41,7 +41,7 @@ public class DemoController {
     /*항상 먼저 GetMapping이 들어가야 함.*/
     /*등록 페이지인 from.jsp 페이지 */
     @GetMapping("/form")
-    public ModelAndView formpage(Model model){
+    public ModelAndView formpage(){
         ModelAndView mav = new ModelAndView("form");
         return mav;
     }
@@ -53,8 +53,7 @@ public class DemoController {
                                    @RequestParam Integer id,
                                    @RequestParam String name,
                                    @RequestParam Integer age,
-                                   @RequestParam Integer phone,
-                                   Model model){
+                                   @RequestParam Integer phone){
 
         ModelAndView mav = new ModelAndView("list");
 
@@ -72,29 +71,27 @@ public class DemoController {
     }
 
 
-    /*수정 페이지인 modify로 이동하는 매핑.*/
+    /*list 페이지에서 id를 클릭했을 때 넘어오는 detail 페이지. .*/
     @RequestMapping("/detail")
     public String modify(Model model, @RequestParam(name = "id", required = true) Integer id){
 
+        //member를 새로 정의할 필요가 있음. member는 위에서 여러 번 정의했으므로 어느 메서드를 쓰는지 정확하게 재정의하기.
         Member member = memberService.getMember(id);
 
+        //맴버에 id, name, age, phone 다 들어 있으므로 따로 정의할 필요 없음.
         model.addAttribute("member", member);
         /*model.addAttribute(name);
         model.addAttribute(age);
         model.addAttribute(phone);
 */
         System.out.println("list 페이지에서 선택한 아이디 호출 \n ID : "+id);
-     /*   System.out.println("list 페이지에서 선택한 이름 호출 \n ID : "+name);
-        System.out.println("list 페이지에서 선택한 나이 호출 \n ID : "+age);
-        System.out.println("list 페이지에서 선택한 전화번호 호출 \n ID : "+phone);*/
 
         return "/detail";
     }
 
 
     @PostMapping("/detail")
-    public ModelAndView modifier(HttpServletRequest httpServletRequest,
-                                 @RequestParam Integer id,
+    public ModelAndView modifier(@RequestParam Integer id,
                                  Model model){
 
         ModelAndView mav = new ModelAndView("/detail");
@@ -128,15 +125,35 @@ public class DemoController {
         return mav;
     }
 
+
+/*    회원 정보 수정창 modify 페이지*/
     @GetMapping("/modify")
-    public ModelAndView detail(Model model){
-        ModelAndView mav = new ModelAndView("modify");
-        return mav;
+    public String  goModify(Model model, @RequestParam(name = "id", required = true) Integer id){
+        Member member = memberService.getMember(id);
+
+        //맴버에 id, name, age, phone 다 들어 있으므로 따로 정의할 필요 없음.
+        model.addAttribute("member", member);
+        return "/modify";
     }
 
+    @PostMapping("/modify2")
+    public ModelAndView modify(Model model,
+                         @ModelAttribute(name = "id") Integer id,
+                         @ModelAttribute(name = "nm") String name,
+                         @ModelAttribute(name = "age") Integer age,
+                         @ModelAttribute(name = "phone") Integer phone){
 
+        ModelAndView mav = new ModelAndView("list");
 
-
-
-
+        try{
+            System.out.print("기존 ID:" + id +"기존 name: "+name + "기존 age: "+age + "기존 phone: "+phone+"\n");
+            Member member = memberService.updateMember(id, name, age, phone);
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            System.out.print("수정된 name: "+name + "수정된 age: "+age + "수정된 phone: "+phone);
+            extracted(mav);
+        }
+        return mav;
+    }
 }
