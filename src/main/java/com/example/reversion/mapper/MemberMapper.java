@@ -8,9 +8,11 @@ import java.util.List;
 @Mapper
 public interface  MemberMapper {
 
-     Member getMember();
+     Member getMember(Integer id);
      List<Member> getMemberList();
      Member createMember(Member member);
      Member updateMember(Member member);
      int deleteMember(int id);
+
+     /*Member CheckMember(int id);*/
 }

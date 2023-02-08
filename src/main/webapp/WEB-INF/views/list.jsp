@@ -12,13 +12,34 @@
             background-color: #1f2029;
             overflow-x: hidden;
         }
+        a{
+            cursor: pointer;
+            transition: all 200ms linear;
+        }
+        a:hover{
+            text-decoration: none;
+        }
+        p{
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+        h4{
+            font-weight: 600;
+        }
+        h6 span{
+            padding: 0 20px;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
     </style>
     <title>test</title>
 </head>
 
 
-<h1 align="center">DB에 있는 값을 조회</h1>
-
+<h1 align="center">회원정보</h1>
+<h2 align="center">아이디를 클릭하면 회원정보 수정 창으로 이동</h2>
 
 <%--DB에 있는 값을 조회해서 뿌려주는 테이블 태그--%>
 <table width="100%" border="1">
@@ -32,11 +53,10 @@
     </thead>
     <tbody>
 
-
 <%--DB에 있던 값을 뿌려주는 반복문. jstl 문법이다.--%>
     <c:forEach var="member" items="${members}">
         <tr>
-            <td><c:out value="${member.id}"></c:out></td>
+            <td><a href="http://localhost:8080/detail?id=${member.id}"><c:out value="${member.id}"></c:out></a></td>
             <td><c:out value="${member.name}"></c:out></td>
             <td><c:out value="${member.age}"></c:out></td>
             <td><c:out value="${member.phone}"></c:out></td>
@@ -59,3 +79,15 @@
     </body>
 </html>
 
+<script>
+    $.ajax({
+        type: "get",
+        utl : "/detail?id=${member.id}",
+        contentType:"application.json",
+        dataType : "text",
+        success: function (data){
+            console.log('연결됨');
+            console.log(${member.id});
+        }
+    })
+</script>

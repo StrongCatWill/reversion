@@ -14,12 +14,13 @@
     <title>Modify detail</title>
 </head>
 <body>
+
+<h1>회원 정보 수정</h1>
     <form method="post">
+        <label style="align-self: center">수정할 ID 입력</label><br>
         아이디 : <input type="text" name="id" value="${post.id}"><br>
-        이름 : <input type="text" name="name" value="${post.name}"><br>
-        나이 : <input type="text" name="age" value="${post.age}"><br>
-        전화번호 : <input type="text" name="phone" value="${post.phone}"><br>
-        <button type="submit" onclick="" value="저장" id="submit">저장</button><br><br>
+        확인된 정보 :
+        <button type="submit" onclick="" value="확인" id="submit">ID 확인</button><br><br>
         <input type="reset" value="목록" onclick="location.href='http://localhost:8080/list'">
     </form>
 

@@ -7,9 +7,14 @@
         select * from test_for_testuser
     </select>
 
+
     <select id="getMember" resultType="com.example.reversion.model.Member">
-        select * from test_for_testuser limit 1
+        select * from test_for_testuser where id = #{id}
     </select>
+
+  <!--  <select id="checkMember" resultType="com.example.reversion.model.Member">
+        select * from test_for_testuser where id = #{id}
+    </select>-->
 
     <insert id="createMember">
         insert into test_for_testuser(id, name, age, phone) values(#{id}, #{name}, #{age}, #{phone})
