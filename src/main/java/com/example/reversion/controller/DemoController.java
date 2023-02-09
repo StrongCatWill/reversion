@@ -80,6 +80,7 @@ public class DemoController {
 
         //맴버에 id, name, age, phone 다 들어 있으므로 따로 정의할 필요 없음.
         model.addAttribute("member", member);
+
         /*model.addAttribute(name);
         model.addAttribute(age);
         model.addAttribute(phone);

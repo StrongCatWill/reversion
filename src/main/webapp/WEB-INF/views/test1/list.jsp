@@ -86,7 +86,7 @@
 <script>
     function goDetail(id){
         $.ajax({
-            url:"/detail",
+            url:"test2/detail",
             type:"post",
             data: (
                 {"id": id}
