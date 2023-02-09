@@ -43,11 +43,14 @@
     <li>Member : ${member}</li>
 </ul>
 --%>
-
-<li>  사용자의 ID : <c:out value="${member.id}"></c:out></li>
-<li>  사용자의 이름 : <c:out value="${member.name}"></c:out></li>
-<li>  사용자의 나이 : <c:out value="${member.age}"></c:out></li>
-<li>  사용자의 전화번호 : <c:out value="${member.phone}"></c:out></li>
+<table class="tableSubHeadingColor", id="detailTable" width="40%" border="1">
+    <tr>
+        <td>사용자의 ID : <c:out value="${member.id}"></c:out></td>
+        <td>사용자의 이름 : <c:out value="${member.name}"></c:out></td>
+        <td>사용자의 나이 : <c:out value="${member.age}"></c:out></td>
+        <td>사용자의 전화번호 : <c:out value="${member.phone}"></c:out></td>
+    </tr>
+</table>
 
 
 <button type="button" onclick="location.href='http://localhost:8080/modify?id=${member.id}&name=${member.name}&age=${member.age}&phone=${member.phone}'">수정 페이지로 이동</button>

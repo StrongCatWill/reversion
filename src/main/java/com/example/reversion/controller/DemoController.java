@@ -126,6 +126,7 @@ public class DemoController {
     }
 
 
+
 /*    회원 정보 수정창 modify 페이지*/
     @GetMapping("/modify")
     public String  goModify(Model model, @RequestParam(name = "id", required = true) Integer id){
