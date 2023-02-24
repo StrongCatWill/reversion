@@ -34,11 +34,21 @@
     <title>ajax testing page</title>
 </head>
 <body>
-    <h1 align="center">멤버 조회</h1>
+    <h1>AJAX TEST</h1>
 
     <div id="table-div">
-<%--        리스트를 불러오는 페이지, table div는--%>
+
     </div>
+
+<%--
+    div로 감싸놨기 때문에 얘를 id로 호출해줘야 이 그룹이 보여진다. table-div를 보여주는 방식은
+    $('#table-div').on('click', 'table tr.table_tr', function() {
+            let id = $(this).find('td:eq(0)').text()
+            console.log(id)
+            goDetail(id)
+        });
+        처럼 부르는 듯.
+--%>
 
     <div id="select_table">
     </div>
@@ -49,6 +59,9 @@
 
 
 <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<%--
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js" integrity="sha256-xLD7nhI62fcsEZK2/v8LsBcb4lG7dgULkuXoXB/j91c=" crossorigin="anonymous"></script>
+--%>
 
 <script>
 
