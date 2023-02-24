@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
 
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
@@ -18,6 +19,7 @@ public class RemoteController {
 
     private final MemberService memberService;
 
+    /*testMain 접속하면 뜨는 창*/
     @GetMapping("/testMain")
     public String testMain(){
         System.out.println("ajax 띄울 페이지에 연결 성공");
@@ -35,11 +37,11 @@ public class RemoteController {
     }
 
 
-    @RequestMapping("/test2/detail")
-    public ResponseEntity<Member> detail
+    @RequestMapping("/test2/test2Detail")
+    public ResponseEntity<Member> test2Detail
             (@RequestParam(name = "id", required = true) Integer id, Model model){
 
-        System.out.println("test2/detail 연결 성공");
+        System.out.println("test2/test2Detail 연결 성공");
 
         Member member = memberService.getMember(id);
         model.addAttribute("member", member);
@@ -47,5 +49,17 @@ public class RemoteController {
         return new ResponseEntity<>(member, HttpStatus.OK);
     }
 
+    @PostMapping("/test2/form")
+    public ResponseEntity<Member> test2Form(HttpServletRequest httpServletRequest,
+                                            @RequestParam(name = "id") Integer id,
+                                            @RequestParam(name = "name") String name,
+                                            @RequestParam(name = "age") Integer age,
+                                            @RequestParam(name = "phone") Integer phone){
 
+        System.out.println("test2/form 로딩 성공");
+        Member member = memberService.createMember(id, name, age, phone);
+
+        return new ResponseEntity<>(member, HttpStatus.OK);
+        
+    }
 }

@@ -10,27 +10,6 @@
             background-color: #1f2029;
             overflow-x: hidden;
         }
-        a{
-            cursor: pointer;
-            transition: all 200ms linear;
-        }
-        a:hover{
-            text-decoration: none;
-        }
-        p{
-            font-weight: 500;
-            font-size: 14px;
-            line-height: 1.7;
-        }
-        h4{
-            font-weight: 600;
-        }
-        h6 span{
-            padding: 0 20px;
-            text-transform: uppercase;
-            font-weight: 700;
-        }
-
     </style>
     <title>Insert info</title>
 </head>

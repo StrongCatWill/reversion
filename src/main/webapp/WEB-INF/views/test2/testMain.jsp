@@ -52,6 +52,9 @@
 
     <div id="select_table">
     </div>
+
+    <div id="form-div"></div>
+    <button id="btnGoForm">Add Member</button>
 </body>
 
 
@@ -59,12 +62,16 @@
 <%--
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js" integrity="sha256-xLD7nhI62fcsEZK2/v8LsBcb4lG7dgULkuXoXB/j91c=" crossorigin="anonymous"></script>
 --%>
+
 <script>
 
+    /*페이지 로딩되자 마자 콜링되는 펑션*/
     $(function(){
 
         list();
+        /*로딩됐을 때 detail과 form은 숨겨지도록. */
         $('#detail-div').hide()
+        $('#form-div').hide()
 
         $('#table-div').on('click', 'table tr.table_tr', function() {
             let id = $(this).find('td:eq(0)').text()
@@ -72,6 +79,11 @@
             postMessage(id)
             goDetail(id)
             console.log("detail.....");
+        });
+
+        /*버튼 클릭하면 멤버 등록 페이지로 이동시킴.*/
+        $('#btnGoForm').on('click', function (){
+            goForm();
         });
 
 
@@ -187,6 +199,29 @@
         /*콘솔은 개발자 도구에서 확인 가능. */
         console.log(id);
         $('#detail-div').append(select_table)
+    }
+
+    function goForm(){
+        $('#form-div').show()
+
+        $('#table-div').hide()
+        $('#select_table').hide()
+
+        $.ajax({
+            url:"/test2/form",
+            type:"post",
+            dataType: "json",
+
+            success :function form(result) {
+
+                console.log(result);
+                console.log("from 페이지와 통신 성공");
+
+                let formFor
+            }
+        });
+
+
     }
 </script>
 
