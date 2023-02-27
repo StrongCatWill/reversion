@@ -3,40 +3,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <style type="text/css">
-        body{
-            font-weight: 300;
-            font-size: 15px;
-            line-height: 1.7;
-            color: #c4c3ca;
-            background-color: #1f2029;
-            overflow-x: hidden;
-        }
-
-        table{
-            width: 100%;
-            border: 2px solid #6495EDFF;
-            align-items: center;
-            padding: 30px;
-        }
-
-        th, td{
-            border: 1px solid #ffffff;
-        }
-
-        text{
-            font-size: 20px;
-            font-family: 'Times New Roman';
-            color: #ffffff;
-        }
-
-    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
     <title>ajax testing page</title>
 </head>
 <body>
     <h1>AJAX TEST</h1>
 
-    <div id="table-div">
+    <div id="table-div" class="col-xs-8">
 
     </div>
 
@@ -55,6 +28,9 @@
 
     <div id="form-div"></div>
     <button id="btnGoForm">Add Member</button>
+<div id="templateInput" style="display:none">
+    dfgdfg
+</div>
 </body>
 
 
@@ -137,7 +113,6 @@
 
 
 /*                아이디를 찍으면 선택한 아이디가 넘어오기는 함. */
-
             }
         });
     }
