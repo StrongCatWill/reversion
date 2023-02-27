@@ -23,7 +23,7 @@ public class RemoteController {
     @GetMapping("/testMain")
     public String testMain(){
         System.out.println("ajax 띄울 페이지에 연결 성공");
-        return "test2/testMain";
+        return "Main";
     }
 
     /*멤버 리스트 띄우는 기능*/
