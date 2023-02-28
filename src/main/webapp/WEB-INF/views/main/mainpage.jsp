@@ -3,12 +3,12 @@
 
 <html>
 <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js" integrity="sha512-0QbL0ph8Tc8g5bLhfVzSqxe9GERORsKhIn1IrpxDAgUsbBGz/V7iSav2zzW325XGd1OMLdL4UiqRJj702IeqnQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <title>ajax refactoring</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <style>
         body{
             background-color: #adc0b7;
-
         }
         #form-div{
             align-self: center;
@@ -37,6 +37,16 @@
         #contents{
             width: 100%;
         }
+
+        tr, td{
+            border: 1px dotted #1f2029;
+            padding: 10px;
+            margin: 10px;
+        }
+        table{
+            border: 3px solid #1f2029;
+            box-shadow: 5px 5px;
+        }
     </style>
 </head>
 <body>
@@ -50,7 +60,7 @@
 
     <div id="detailDiv">
         <hr>
-        <table id="detailTable" width="40%" border="1">
+        <table id="detailTable" width="50%" border="1">
             <tr>
                 <td>사용자의 ID : <c:out value="${member.id}"></c:out></td>
                 <td>사용자의 이름 : <c:out value="${member.name}"></c:out></td>
@@ -90,6 +100,9 @@
     <button type="button" id="goDetailMamber">
         Show Member Detail
     </button>
+    <button type="button" id="toTopButn">
+        To page top
+    </button>
 </div>
 
 
@@ -118,23 +131,27 @@
 
                 $.each(result, function(index, item){
                     let tr = $('<tr>', {
-                        class : 'table_tr'
+                        class : 'table_tr',
                     });
 
                     let td_id =$('<td/>',{
-                        text : item.id
+                        text : item.id,
+                        // click : tableClick()
                     });
 
                     let td_name =$('<td/>',{
-                        text : item.name
+                        text : item.name,
+                        // click : tableClick()
                     });
 
                     let td_age =$('<td/>',{
-                        text : item.age
+                        text : item.age,
+                        // click : tableClick()
                     });
 
                     let td_phone =$('<td/>',{
-                        text : item.phone
+                        text : item.phone,
+                        // click : tableClick()
                     });
 
                     tr.append(td_id)
@@ -222,7 +239,17 @@
         });
     });
 
+    //테이블 클릭하면 디테일 보여주고 그걸 show member detail 페이지로 띄워주는 걸 만들려고 함. td의 text나 area가 클릭 가능하게 바뀌어야 한다.
+    function tableClick(){
+        alert("클릭됨");
+    }
 
+    $("#toTopButn").click(function(){
+        window.scrollTo(0,0);
+        $("html, body").animate({
+            scrollTop:0
+        }, 500, "easeOutCubic");
+    });
 
 </script>
 </body>
