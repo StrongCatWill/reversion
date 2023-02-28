@@ -23,17 +23,14 @@ public class MemberService {
     }
 
     /*새 멤버 받는 메소드 부분. getter와 setter가 혼용 사용중이라 수정하고 있음. 리팩터링 하면 integer를 더했음에도 오류가 난다 */
-    public Member createMember(Member member) {
+    public void createMember(Member member) {
 
 //        Member member = new Member();
 
         //안에 변수 안 넣고 진행하면 따로 오류는 안 나는데 반영이 안 됨.
-        member.setId(member.getId());
-        member.setName(member.getName());
-        member.setAge(member.getAge());
-        member.setPhone(member.getPhone());
 
-        return memberMapper.createMember(member);
+
+        memberMapper.createMember(member);
     }
 
     /*업데이트 하는 자리 따로 빼야 함.*/

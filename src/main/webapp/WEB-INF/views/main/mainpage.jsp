@@ -194,23 +194,23 @@
 
         console.log(id, name, age, phone);
 
-        let member ={
-            id, name, age, phone
-        }
+        let member ={ "id" : id,
+            "name" : name,
+            "age" : age,
+            "phone" : phone}
 
         $.ajax({
             url:"./main/add",
             type:"post",
             dataType:"json",
-            contentType:"application/json;charset=UTF-8",
+//            contentType:"application/json",
             async : false,
-            data: { "id" : member.id,
-                    "name" : member.name,
-                    "age" : member.age,
-                    "phone" : member.phone},
-            success :function(id, name, age, phone){
-                console.log(id);
-                alert("입력값 아이디만 확인"+id);
+            data: member,
+            success :function(data, status, settings){
+                console.log(data);
+                alert("입력값 아이디만 확인"+data["id"]);
+                $('#tableDiv').empty();
+                Mainlist();
                 $("#goAddMamber").show();
                 $("#goDetailMamber").show();
                 },

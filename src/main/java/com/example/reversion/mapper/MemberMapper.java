@@ -10,7 +10,7 @@ public interface  MemberMapper {
 
      Member getMember(Integer id);
      List<Member> getMemberList();
-     Member createMember(Member member);
+     int createMember(Member member);
      Member updateMember(Member member);
      int deleteMember(int id);
 
