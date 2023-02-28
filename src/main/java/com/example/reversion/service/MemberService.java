@@ -23,15 +23,15 @@ public class MemberService {
     }
 
     /*새 멤버 받는 메소드 부분. getter와 setter가 혼용 사용중이라 수정하고 있음. 리팩터링 하면 integer를 더했음에도 오류가 난다 */
-    public Member createMember(Integer id, String name, Integer age, Integer phone) {
+    public Member createMember(Member member) {
 
-        Member member = new Member();
+//        Member member = new Member();
 
         //안에 변수 안 넣고 진행하면 따로 오류는 안 나는데 반영이 안 됨.
-        member.setId(id);
-        member.setName(name);
-        member.setAge(age);
-        member.setPhone(phone);
+        member.setId(member.getId());
+        member.setName(member.getName());
+        member.setAge(member.getAge());
+        member.setPhone(member.getPhone());
 
         return memberMapper.createMember(member);
     }

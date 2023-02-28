@@ -49,26 +49,26 @@ public class MainController {
         return modelAndView;
     }
 
-    @PostMapping("/main/add")
+
+    @ResponseBody
+    @RequestMapping(value = "/main/add", method = RequestMethod.POST)
     /*등록 페이지에서 입력을 받아내는 testInsert 메소드. */
     /*포스트로 받는 곳은 항상 GetMapping 후에 들어와야 한다. 웹페이지는 페이지가 로딩 된 이후에 로직이 돌아간다.*/
-    public ModelAndView addForm(HttpServletRequest httpServletRequest,
-                                   @RequestParam Integer id,
-                                   @RequestParam String name,
-                                   @RequestParam Integer age,
-                                   @RequestParam Integer phone){
+    public ModelAndView addForm(Member member){
 
-        ModelAndView mav = new ModelAndView("/main/add");
+        ModelAndView mav = new ModelAndView("/main/mainpage");
 
         try{
-            Member member = memberService.createMember(id, name, age, phone);
+            Member getMember = memberService.createMember(member);
+            System.out.print(getMember);
         }catch (Exception e){
             e.printStackTrace();
         }finally {
-            System.out.println("ID:" + id +"name: "+name + "age: "+age + "phone: "+phone);
+            extracted(mav);
         }
 
         //이 위의 try-catch문은 update에 관한 것이므로 전체 controller가 반환하는 값은 저 블록 밖에 위치해야 함.
+        extracted(mav);
         return (mav);
     }
 }

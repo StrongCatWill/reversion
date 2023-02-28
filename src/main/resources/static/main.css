@@ -1,0 +1,7 @@
+@font-face {
+    font-family: "BMDOHYEON_otf.otf";
+    src: url("../../fonts/BMDOHYEON_otf.otf");
+}
+*{
+    font-family: BMDOHYEON_otf;
+}
