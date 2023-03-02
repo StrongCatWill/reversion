@@ -1,9 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
+<!DOCTYPE html>
 <html>
 <head>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js" integrity="sha512-0QbL0ph8Tc8g5bLhfVzSqxe9GERORsKhIn1IrpxDAgUsbBGz/V7iSav2zzW325XGd1OMLdL4UiqRJj702IeqnQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <title>ajax refactoring</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <style>
@@ -38,14 +38,21 @@
             width: 100%;
         }
 
-        tr, td{
+        tr, td, th{
             border: 1px dotted #1f2029;
-            padding: 10px;
-            margin: 10px;
+            padding: 20px;
+            margin: 100px;
+        }
+        thead{
+            border: 3px dotted #1f2029;
         }
         table{
             border: 3px solid #1f2029;
-            box-shadow: 5px 5px;
+        }
+
+        .select{
+            background-color: #46A094;
+            border: 3px solid black;
         }
     </style>
 </head>
@@ -53,12 +60,33 @@
 <h1 align="center">멤버 리스트 조회</h1>
 
 <div id="contents" align="center">
+
     <div id="tableDiv">
+        <table id="listTable">
+            <thead>
+<%--                <tr>--%>
+                    <th>ID</th>
+                    <th>이름</th>
+                    <th>나이</th>
+                    <th>전화번호</th>
+<%--                </tr>--%>
+            </thead>
+            <tbody id="tbody">
+                <tr class="table_tr">
+
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <br><br><br><br>
     </div>
 
 
 
     <div id="detailDiv">
+        <br><br><br>
+        <h5><br>선택한 사용자의 세부 정보입니다. <br> 수정 버튼을 누르면 사용자 정보를 수정합니다. </h5>
         <hr>
         <table id="detailTable" width="50%" border="1">
             <tr>
@@ -70,13 +98,31 @@
         </table>
 
 
-        <button type="button" onclick="location.href='http://localhost:8080/modify?id=${member.id}&name=${member.name}&age=${member.age}&phone=${member.phone}'">수정</button>
+        <button type="button" id="toUpdateMemberBtn">수정</button>
         <button type="button" id="toMainBtn">수정하지 않고 목록으로</button>
+        <br><br>
+    </div>
+
+
+    <div id="updateMember">
+        <br>
+        <h4>회원 정보 수정</h4>
+        <hr><br><br>
+        <form id="updateForm" >
+            아이디는 수정할 수 없습니다 : <input type="text" name="id" autocomplete="on" placeholder="이전 아이디 : " value="<c:out value="${member.id}"></c:out>" ><br>
+            수정할 이름 : <input type="text" name="nm" autocomplete="off" placeholder="이전 이름 : " value="<c:out value="${member.name}"></c:out>" ><br>
+            수정할 나이 : <input type="text" name="age" autocomplete="off" placeholder="이전 나이 : " value="<c:out value="${member.age}"></c:out>" ><br>
+            수정할 전화번호 : <input type="text" name="phone" autocomplete="off" placeholder="이전 전화번호 : " value="<c:out value="${member.phone}"></c:out>" ><br>
+
+            <button type="submit" id="saveBtnUpdateForm">수정</button>
+            <button type="submit" id="goMainFromUpdate">수정하지 않고 메인으로 이동</button><br><br>
+        </form>
     </div>
 
 
     <div id="form-div">
         <div id="hide-form">
+            <br>
             <hr>
             <h4>새 정보 입력</h4>
             <h6>각각 폼에 맞는 정보를 입력하세요.</h6>
@@ -97,9 +143,6 @@
     <button type="button" id="goAddMamber">
         addMember
     </button>
-    <button type="button" id="goDetailMamber">
-        Show Member Detail
-    </button>
     <button type="button" id="toTopButn">
         To page top
     </button>
@@ -109,14 +152,23 @@
 <script src="https://code.jquery.com/jquery-3.6.3.js" integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
 <script>
 
-    $(function(){
+    $(function() {
         Mainlist();
-
         $("#form-div").hide();
         $("#detailDiv").hide();
+        $("#updateMember").hide();
+
+        // $(document).on('click', 'table tr.trClick', function(){
+        //
+        //     key
+        //     detail(key)
+        // });
     });
 
+
     function Mainlist(){
+
+        $("#tableDiv").show();
 
         $.ajax({
             url:"./main/list",
@@ -126,68 +178,89 @@
             success:function(result){
                 console.log(result)
 
-                let ListTable = $('<table/>');
-                $("ListTable").html("<tr><th>아이디</th><th>이름</th><th>나이</th><th>전화번호</th></tr>");
+                let ListTable = $('<tbody/>');
+
+
 
                 $.each(result, function(index, item){
-                    let tr = $('<tr>', {
+
+                    let tr = $('<tr/>', {
                         class : 'table_tr',
                     });
 
                     let td_id =$('<td/>',{
                         text : item.id,
-                        // click : tableClick()
                     });
 
                     let td_name =$('<td/>',{
                         text : item.name,
-                        // click : tableClick()
                     });
 
                     let td_age =$('<td/>',{
                         text : item.age,
-                        // click : tableClick()
                     });
 
                     let td_phone =$('<td/>',{
                         text : item.phone,
-                        // click : tableClick()
                     });
 
-                    tr.append(td_id)
-                    tr.append(td_name)
-                    tr.append(td_age)
-                    tr.append(td_phone)
+                    tr.append(td_id);
+                    tr.append(td_name);
+                    tr.append(td_age);
+                    tr.append(td_phone);
 
-                    ListTable.append(tr);
+                    $('#tbody').append(tr);
                 });
-
-                $('#tableDiv').append(ListTable);
-                $('#ListTable').css({
-                    width:"100%", border:"1"
-                })
             }
         });
     }
 
+
     $("#goAddMamber").click(function(){
         $("#form-div").show();
+
         $("#goAddMamber").hide();
-        $("#goDetailMamber").hide();
-    })
+    });
 
-    $("#goDetailMamber").click(function(){
-        $("#detailDiv").show();
-        $("#goAddMamber").hide();
-        $("#goDetailMamber").hide();
+    //디테일 Div에서
+    $("#toUpdateMemberBtn").click(function(){
+
+    });
 
 
-    })
+    function detail(key){
+
+
+
+    }
+
+    // function hoveredItem(data){
+    //
+    //     let id = data.id();
+    //     let name = data.name();
+    //     let age = data.age();
+    //     let phone = data.phone();
+    //
+    //     let member ={ "id" : id,
+    //         "name" : name,
+    //         "age" : age,
+    //         "phone" : phone}
+    //
+    //     $.ajax({
+    //         type : "post",
+    //         utl : "./main/detail",
+    //         dataType : "json",
+    //         data : member,
+    //         success : function(data, status, settings){
+    //             data.id
+    //         }
+    //     })
+    // }
 
     $("#toMainBtn").click(function(){
         $("#detailDiv").hide();
         $("#goAddMamber").show();
-        $("#goDetailMamber").show();
+        // hoveredItem().stop();
 
         // Mainlist.preventdefault(); // 지금 그냥 띄우면 수정하지 않고 목록을 누를 때 계속 Mainlist가 실행됨. 이걸 고치려면 기본행동 취소를 하거나, 새로 페이지를 불러와야 하는데 이건 비동기 통신이 아니다.
 
@@ -197,13 +270,13 @@
         $("#form-div").hide();
         console.log("resetBtn 클릭됨. 저장하지 않고 addMember 폼 닫힘. ");
         $("#goAddMamber").show();
-        $("#goDetailMamber").show();
     })
 
 
     $("#saveMember").click(function(){
 
         $("#form-div").hide();
+
         let id = $("#id").val();
         let name = $("#name").val();
         let age = $("#age").val();
@@ -229,12 +302,10 @@
                 $('#tableDiv').empty();
                 Mainlist();
                 $("#goAddMamber").show();
-                $("#goDetailMamber").show();
                 },
             error:function(error){
                 alert('데이터 값이 확인되지 않음'+error);
                 $("#goAddMamber").show();
-                $("#goDetailMamber").show();
             }
         });
     });
@@ -244,12 +315,43 @@
         alert("클릭됨");
     }
 
+    //맨 처음으로 이동하는 함수.
     $("#toTopButn").click(function(){
         window.scrollTo(0,0);
         $("html, body").animate({
             scrollTop:0
-        }, 500, "easeOutCubic");
+        }, 500);
     });
+
+
+    //클릭 전에 hover 상태일 때 마우스가 올라간 member의 정보를 goDetailMamber의 테이블에 띄워줌.
+
+    function hoverSelect(data){
+        if(XMLHttpRequest){
+            var obj = document.getElementById(this.id);
+            XMLHttpRequest.open("get", data);
+            alert(data.name);
+        }
+    }
+
+
+    $("tr").hover(function(){
+       var tr =  $(this);
+       tr.addClass("select");
+        //여기는 선택된 셀 앞에서 클릭을 했을 때, 수정 페이지로 넘어가는 화면. 이건 숨긴 데이터를 보여주는 걸로 만들어야 함.
+        $(".select").click(function(data){
+
+            $("#goDetailMamber").show();
+            $("#goAddMamber").hide();
+
+        });
+    })
+    $("tr").mouseleave(function (e) {
+        $(this).removeClass("select");
+
+    });
+
+
 
 </script>
 </body>
