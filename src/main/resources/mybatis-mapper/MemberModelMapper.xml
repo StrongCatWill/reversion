@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.reversion.mapper.MemberMapper_2">
+
+    <select id="getMemberModelList" resultType="com.example.reversion.model.MemberModel">
+        select * from membertable
+    </select>
+
+    <select id="getMemberModel" resultType="com.example.reversion.model.MemberModel">
+        select * from membertable where memberCodeNum = #{memberCodeNum}
+    </select>
+
+    <insert id="createMemberModel">
+        insert into membertable(memberID, memberName, memberPhone, memberGender, memberBirth)
+        values ( #{memberID}, #{memberName}, #{memberPhone}, #{memberGender}, #{memberBirth})
+    </insert>
+
+    <update id="updateMemberModel">
+        update membertable set memberID =#{memberID},
+                               memberName =#{memberName},
+                               memberPhone =#{memberPhone},
+                               memberGender =#{memberGender},
+                               memberBirth =#{memberBirth}
+        where memberCodeNum = #{memberCodeNum}
+    </update>
+
+    <delete id="deleteMemberModel">
+        delete from membertable
+        where memberID = #{memberID}
+    </delete>
+</mapper>

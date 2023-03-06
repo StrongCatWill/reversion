@@ -1,8 +1,8 @@
 package com.example.reversion.controller;
 
 
-import com.example.reversion.model.Member;
-import com.example.reversion.service.MemberService;
+import com.example.reversion.model.MemberModel;
+import com.example.reversion.service.MemberModelService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MainController {
 
-    private final MemberService memberService;
+    private final MemberModelService memberModelService;
 
     @GetMapping("/main")
     public ModelAndView mainpage(){
@@ -28,11 +28,11 @@ public class MainController {
     }
 
     @GetMapping("/main/list")
-    public ResponseEntity<List<Member>> mainList(){
+    public ResponseEntity<List<MemberModel>> mainList(){
 
         System.out.println("main page List 연결 성공");
 
-        List<Member> memberList = memberService.getMemberList();
+        List<MemberModel> memberList = memberModelService.getMemberModelList();
 
         return new ResponseEntity<>(memberList, HttpStatus.OK);
     }
@@ -49,15 +49,14 @@ public class MainController {
     @RequestMapping(value = "/main/add", method = RequestMethod.POST)
     /*등록 페이지에서 입력을 받아내는 testInsert 메소드. */
     /*포스트로 받는 곳은 항상 GetMapping 후에 들어와야 한다. 웹페이지는 페이지가 로딩 된 이후에 로직이 돌아간다.*/
-    public ResponseEntity<Member> addForm(@ModelAttribute Member member){
+    public ResponseEntity<MemberModel> addForm(@ModelAttribute MemberModel memberModel){
 
         try{
-            memberService.createMember(member);
-            return ResponseEntity.ok(member);
+            memberModelService.createMemberModel(memberModel);
+            return ResponseEntity.ok(memberModel);
         }catch (Exception e){
             e.printStackTrace();
         }
-
 
         return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
     }
@@ -65,33 +64,33 @@ public class MainController {
 
 //    디테일 보여주는 페이지 컨트롤러, 이건 넘어오는 다른 페이지의 데이터가 없는 대신, hover된 데이터를 보여주는 것임.
 @RequestMapping("/main/detail")
-public String modify(Model model, @RequestParam(name = "id", required = true) Integer id){
+public String modify(Model model, @RequestParam(name = "memberID", required = true) String memberID){
 
-    Member member = memberService.getMember(id);
+    MemberModel memberModel = memberModelService.getMemberModel(memberID);
 
     //맴버에 id, name, age, phone 다 들어 있으므로 따로 정의할 필요 없음.
-    model.addAttribute("member", member);
-    System.out.println("list 페이지에서 선택한 아이디 호출 \n ID : "+id);
+    model.addAttribute("memberModel", memberModel);
+    System.out.println("list 페이지에서 선택한 아이디 호출 \n memberID : "+memberID);
 
     return "/main/detail";
     }
 
     @PostMapping("/main/detail")
-    public ModelAndView modifier(@RequestParam Integer id,
+    public ModelAndView modifier(@RequestParam String memberID,
                                  Model model){
 
         ModelAndView mav = new ModelAndView("/main/detail");
 
         try{
-            Member member = memberService.CheckMember(id);
+            MemberModel memberModel = memberModelService.CheckMemberModel(memberID);
 
-            if (memberService.CheckMember(id).equals(id)){
-                model.addAttribute("member", memberService.CheckMember(id));
+            if (memberModelService.CheckMemberModel(memberID).equals(memberID)){
+                model.addAttribute("memberModel", memberModelService.CheckMemberModel(memberID));
             }
         }catch (Exception e){
             e.printStackTrace();
         }finally {
-            System.out.println("확인된 ID:" + id);
+            System.out.println("확인된 ID:" + memberID);
             System.out.println(model);
         }
         return mav;

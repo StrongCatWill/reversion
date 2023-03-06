@@ -57,7 +57,7 @@
     </style>
 </head>
 <body>
-<h1 align="center">멤버 리스트 조회</h1>
+<h1 align="center">Member List Table</h1>
 
 <div id="contents" align="center">
 
@@ -65,10 +65,12 @@
         <table id="listTable">
             <thead>
 <%--                <tr>--%>
-                    <th>ID</th>
-                    <th>이름</th>
-                    <th>나이</th>
-                    <th>전화번호</th>
+                <th>memberCodeNum</th>
+                <th>memberID</th>
+                <th>memberName</th>
+                <th>memberPhone</th>
+                <th>memberGender</th>
+                <th>memberBirth</th>
 <%--                </tr>--%>
             </thead>
             <tbody id="tbody">
@@ -126,10 +128,11 @@
             <hr>
             <h4>새 정보 입력</h4>
             <h6>각각 폼에 맞는 정보를 입력하세요.</h6>
-            아이디 : <input type="text" id="id"><br>
-            이름 : <input type="text" id="name"><br>
-            나이 : <input type="text" id="age"><br>
-            전화번호 : <input type="text" id="phone"><br>
+            memberID : <input type="text" id="memberID"><br>
+            memberName : <input type="text" id="memberName"><br>
+            memberPhone : <input type="text" id="memberPhone"><br>
+            memberGender : <input type="text" id="memberGender"><br>
+            memberBirth : <input type="text" id="memberBirth" placeholder="YYYY-MM-DD"><br>
 
             <div id="buttonDiv">
                 <button type="submit" onclick="" value="저장" id="saveMember">저장</button>
@@ -188,26 +191,36 @@
                         class : 'table_tr',
                     });
 
-                    let td_id =$('<td/>',{
-                        text : item.id,
+                    let td_memberCodeNum =$('<td/>',{
+                        text : item.memberCodeNum,
                     });
 
-                    let td_name =$('<td/>',{
-                        text : item.name,
+                    let td_memberID =$('<td/>',{
+                        text : item.memberID,
                     });
 
-                    let td_age =$('<td/>',{
-                        text : item.age,
+                    let td_memberName =$('<td/>',{
+                        text : item.memberName,
                     });
 
-                    let td_phone =$('<td/>',{
-                        text : item.phone,
+                    let td_memberPhone =$('<td/>',{
+                        text : item.memberPhone,
                     });
 
-                    tr.append(td_id);
-                    tr.append(td_name);
-                    tr.append(td_age);
-                    tr.append(td_phone);
+                    let td_memberGender =$('<td/>',{
+                        text : item.memberGender,
+                    });
+
+                    let td_memberBirth =$('<td/>',{
+                        text : item.memberBirth,
+                    });
+
+                    tr.append(td_memberCodeNum);
+                    tr.append(td_memberID);
+                    tr.append(td_memberName);
+                    tr.append(td_memberPhone);
+                    tr.append(td_memberGender);
+                    tr.append(td_memberBirth);
 
                     $('#tbody').append(tr);
                 });
@@ -220,6 +233,7 @@
         $("#form-div").show();
 
         $("#goAddMamber").hide();
+
     });
 
     //디테일 Div에서
