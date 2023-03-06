@@ -25,7 +25,18 @@ public class MemberModelService {
 
     //자, memberCodeNum은 따로 입력을 받지 않아도 생성되는 auto incrememtn인데 memberModel에는 memberCodeNum이 모두 포함되어 있다. 따로 세팅을 해줘야 할 것 같다.
     public void createMemberModel(MemberModel memberModel){
-        memberMapper2.createMemberModel(memberModel);
+
+        MemberModel member = new MemberModel();
+        member.setMemberID(memberModel.getMemberID());
+        member.setMemberName(memberModel.getMemberName());
+        member.setMemberPhone(memberModel.getMemberPhone());
+        member.setMemberGender(memberModel.getMemberGender());
+        member.setMemberBirth(memberModel.getMemberBirth());
+
+
+
+        memberMapper2.createMemberModel(member);
+
     }
 
     public MemberModel updateMemberModel(String memberID,

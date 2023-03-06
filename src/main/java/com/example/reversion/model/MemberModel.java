@@ -13,7 +13,7 @@ public class MemberModel {
 
     private String memberPhone;
 
-    private Character memberGender;
+    private char memberGender;
 
     private Date memberBirth;
 }

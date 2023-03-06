@@ -38,7 +38,7 @@
             width: 100%;
         }
 
-        tr, td, th{
+        td, th{
             border: 1px dotted #1f2029;
             padding: 20px;
             margin: 100px;
@@ -52,7 +52,7 @@
 
         .select{
             background-color: #46A094;
-            border: 3px solid black;
+            border: 0.5px solid black;
         }
     </style>
 </head>
@@ -73,10 +73,7 @@
                 <th>memberBirth</th>
 <%--                </tr>--%>
             </thead>
-            <tbody id="tbody">
-                <tr class="table_tr">
-
-                </tr>
+            <tbody id="tbody" class="test">
             </tbody>
         </table>
     </div>
@@ -91,17 +88,41 @@
         <h5><br>선택한 사용자의 세부 정보입니다. <br> 수정 버튼을 누르면 사용자 정보를 수정합니다. </h5>
         <hr>
         <table id="detailTable" width="50%" border="1">
-            <tr>
-                <td>사용자의 ID : <c:out value="${member.id}"></c:out></td>
-                <td>사용자의 이름 : <c:out value="${member.name}"></c:out></td>
-                <td>사용자의 나이 : <c:out value="${member.age}"></c:out></td>
-                <td>사용자의 전화번호 : <c:out value="${member.phone}"></c:out></td>
-            </tr>
+            <thead>
+                <tr>
+                    <td>사용자의 memberCodeNum : </td>
+                    <td id="outMemberCodeNum"> </td>
+                </tr>
+                <tr>
+                    <td>사용자의 ID : </td>
+                    <td id="outMemberID"> </td>
+                </tr>
+                <tr>
+                    <td>사용자의 이름 : </td>
+                    <td id="outMemberName"></td>
+                </tr>
+                <tr>
+                    <td>사용자의 전화번호 : </td>
+                    <td id="outMemberPhone"> </td>
+                </tr>
+                <tr>
+                    <td>사용자의 성별 : </td>
+                    <td id="outMemberGender"></td>
+                </tr>
+                <tr>
+                    <td>사용자의 생일 : </td>
+                    <td id="outMemberBirth"></td>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
         </table>
 
 
         <button type="button" id="toUpdateMemberBtn">수정</button>
         <button type="button" id="toMainBtn">수정하지 않고 목록으로</button>
+        <button type="button" id="DeleteMemberBtn">선택한 사용자 삭제</button><br><br>
         <br><br>
     </div>
 
@@ -117,7 +138,8 @@
             수정할 전화번호 : <input type="text" name="phone" autocomplete="off" placeholder="이전 전화번호 : " value="<c:out value="${member.phone}"></c:out>" ><br>
 
             <button type="submit" id="saveBtnUpdateForm">수정</button>
-            <button type="submit" id="goMainFromUpdate">수정하지 않고 메인으로 이동</button><br><br>
+            <button type="reset" id="goMainFromUpdate">수정하지 않고 메인으로 이동</button>
+<%--            <button type="button" id="DeleteMemberBtn">선택한 사용자 삭제</button><br><br>--%>
         </form>
     </div>
 
@@ -131,7 +153,7 @@
             memberID : <input type="text" id="memberID"><br>
             memberName : <input type="text" id="memberName"><br>
             memberPhone : <input type="text" id="memberPhone"><br>
-            memberGender : <input type="text" id="memberGender"><br>
+            memberGender : <input type="text" id="memberGender" placeholder="F or M"><br>
             memberBirth : <input type="text" id="memberBirth" placeholder="YYYY-MM-DD"><br>
 
             <div id="buttonDiv">
@@ -161,17 +183,30 @@
         $("#detailDiv").hide();
         $("#updateMember").hide();
 
-        // $(document).on('click', 'table tr.trClick', function(){
+        // $("#tbody > tr").on("mouseover", 'tr', function(){
         //
-        //     key
-        //     detail(key)
-        // });
+        // })
+
+        $("tbody > tr").click(function(){
+            $(this).addClass("select");
+            console.log('this -----------------> this : ',$(this) );
+            //여기는 선택된 셀 앞에서 클릭을 했을 때, 수정 페이지로 넘어가는 화면. 이건 숨긴 데이터를 보여주는 걸로 만들어야 함.
+            $(".select").click(function (data){
+
+                // getDetagil();
+                $("#detailDiv").show();
+                $("#goAddMamber").hide();
+
+            });
+        })
+
+
     });
 
 
     function Mainlist(){
 
-        $("#tableDiv").show();
+        //$("#tableDiv").show();
 
         $.ajax({
             url:"./main/list",
@@ -181,16 +216,13 @@
             success:function(result){
                 console.log(result)
 
-                let ListTable = $('<tbody/>');
-
-
-
                 $.each(result, function(index, item){
+
 
                     let tr = $('<tr/>', {
                         class : 'table_tr',
+                        // class : null
                     });
-
                     let td_memberCodeNum =$('<td/>',{
                         text : item.memberCodeNum,
                     });
@@ -226,7 +258,15 @@
                 });
             }
         });
+
+
     }
+
+
+
+    $("tr").mouseleave(function (e) {
+        $(this).removeClass("select");
+    });
 
 
     $("#goAddMamber").click(function(){
@@ -236,47 +276,39 @@
 
     });
 
-    //디테일 Div에서
-    $("#toUpdateMemberBtn").click(function(){
 
-    });
+    //클릭한 멤버 값 받아주는 것.
+    function getDetail(){
 
+        let memberCodeNum = $(this).memberCodeNum.val();
+        let memberID = $(this).memberID.val();
+        let memberName = $(this).memberName.val();
+        let memberPhone = $(this).memberPhone.val();
+        let memberGender = $(this).memberGender.val();
+        let memberBirth = $(this).memberBirth.val();
 
-    function detail(key){
+        // let data = {
+        //     "memberCodeNum" :memberCodeNum,
+        //     "memberID" :memberID,
+        //     "memberName" :memberName,
+        //     "memberPhone" : memberPhone,
+        //     "memberGender" :memberGender,
+        //     "memberBirth" :memberBirth
+        // }
 
-
+        $("#outMemberCodeNum").text(memberCodeNum);
+        $("#outMemberID").text(memberID);
+        $("#outMemberName").text(memberName);
+        $("#outMemberPhone").text(memberPhone);
+        $("#outMemberGender").text(memberGender);
+        $("#outMemberBirth").text(memberBirth);
 
     }
-
-    // function hoveredItem(data){
-    //
-    //     let id = data.id();
-    //     let name = data.name();
-    //     let age = data.age();
-    //     let phone = data.phone();
-    //
-    //     let member ={ "id" : id,
-    //         "name" : name,
-    //         "age" : age,
-    //         "phone" : phone}
-    //
-    //     $.ajax({
-    //         type : "post",
-    //         utl : "./main/detail",
-    //         dataType : "json",
-    //         data : member,
-    //         success : function(data, status, settings){
-    //             data.id
-    //         }
-    //     })
-    // }
 
     $("#toMainBtn").click(function(){
         $("#detailDiv").hide();
         $("#goAddMamber").show();
-        // hoveredItem().stop();
 
-        // Mainlist.preventdefault(); // 지금 그냥 띄우면 수정하지 않고 목록을 누를 때 계속 Mainlist가 실행됨. 이걸 고치려면 기본행동 취소를 하거나, 새로 페이지를 불러와야 하는데 이건 비동기 통신이 아니다.
 
     })
 
@@ -291,31 +323,42 @@
 
         $("#form-div").hide();
 
-        let id = $("#id").val();
-        let name = $("#name").val();
-        let age = $("#age").val();
-        let phone = $("#phone").val();
+        let memberID = $("#memberID").val();
+        let memberName = $("#memberName").val();
+        let memberPhone = $("#memberPhone").val();
+        let memberGender = $("#memberGender").val();
+        let memberBirth = $("#memberBirth").val();
 
-        console.log(id, name, age, phone);
+        console.log(memberID, memberName, memberPhone, memberGender, memberBirth);
 
-        let member ={ "id" : id,
-            "name" : name,
-            "age" : age,
-            "phone" : phone}
+        let data = {
+            "memberID" : memberID,
+            "memberName" : memberName,
+            "memberPhone" : memberPhone,
+            "memberGender" :    (memberGender== "M") ?  memberGender :
+                                (memberGender == "F" )? memberGender :
+                                    alert("조건에 맞게 젠더를 입력하세용"),
+            "memberBirth" :memberBirth
+        }
+
+        console.log(data);
 
         $.ajax({
-            url:"./main/add",
+            url:"/main/add",
             type:"post",
+            //form 데이터로 받아오면서, bad request를 던져주게 만든 요인이 요있었음.
+            data: JSON.stringify(data),
             dataType:"json",
-//            contentType:"application/json",
+            contentType:"application/json",
             async : false,
-            data: member,
-            success :function(data, status, settings){
-                console.log(data);
-                alert("입력값 아이디만 확인"+data["id"]);
+            success :function(data, response){
+
+                console.log(response);
+                alert("입력값 아이디만 확인"+data.memberID);
                 $('#tableDiv').empty();
                 Mainlist();
                 $("#goAddMamber").show();
+
                 },
             error:function(error){
                 alert('데이터 값이 확인되지 않음'+error);
@@ -338,32 +381,10 @@
     });
 
 
-    //클릭 전에 hover 상태일 때 마우스가 올라간 member의 정보를 goDetailMamber의 테이블에 띄워줌.
-
-    function hoverSelect(data){
-        if(XMLHttpRequest){
-            var obj = document.getElementById(this.id);
-            XMLHttpRequest.open("get", data);
-            alert(data.name);
-        }
-    }
 
 
-    $("tr").hover(function(){
-       var tr =  $(this);
-       tr.addClass("select");
-        //여기는 선택된 셀 앞에서 클릭을 했을 때, 수정 페이지로 넘어가는 화면. 이건 숨긴 데이터를 보여주는 걸로 만들어야 함.
-        $(".select").click(function(data){
 
-            $("#goDetailMamber").show();
-            $("#goAddMamber").hide();
 
-        });
-    })
-    $("tr").mouseleave(function (e) {
-        $(this).removeClass("select");
-
-    });
 
 
 

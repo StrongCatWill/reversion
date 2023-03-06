@@ -10,7 +10,7 @@
         select * from membertable where memberCodeNum = #{memberCodeNum}
     </select>
 
-    <insert id="createMemberModel">
+    <insert id="createMemberModel" parameterType="com.example.reversion.model.MemberModel">
         insert into membertable(memberID, memberName, memberPhone, memberGender, memberBirth)
         values ( #{memberID}, #{memberName}, #{memberPhone}, #{memberGender}, #{memberBirth})
     </insert>

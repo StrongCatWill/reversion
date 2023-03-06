@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -46,19 +47,18 @@ public class MainController {
 
 
     @ResponseBody
-    @RequestMapping(value = "/main/add", method = RequestMethod.POST)
-    /*등록 페이지에서 입력을 받아내는 testInsert 메소드. */
-    /*포스트로 받는 곳은 항상 GetMapping 후에 들어와야 한다. 웹페이지는 페이지가 로딩 된 이후에 로직이 돌아간다.*/
-    public ResponseEntity<MemberModel> addForm(@ModelAttribute MemberModel memberModel){
-
+//    @RequestMapping(value = "/main/add", method = RequestMethod.POST)
+    @PostMapping("/main/add")
+    public ResponseEntity<MemberModel> addForm(@RequestBody MemberModel memberModel){
+        System.out.println("regist -------------------------> ");
         try{
             memberModelService.createMemberModel(memberModel);
-            return ResponseEntity.ok(memberModel);
         }catch (Exception e){
             e.printStackTrace();
         }
 
-        return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
+        return ResponseEntity.ok(memberModel);
+//        return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
     }
 
 

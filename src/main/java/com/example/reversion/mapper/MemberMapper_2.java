@@ -2,6 +2,7 @@ package com.example.reversion.mapper;
 
 import com.example.reversion.model.MemberModel;
 import org.apache.ibatis.annotations.Mapper;
+
 import java.util.List;
 
 @Mapper
@@ -11,7 +12,9 @@ public interface MemberMapper_2 {
 
     List<MemberModel> getMemberModelList();
 
-    MemberModel createMemberModel(MemberModel memberModel);
+
+
+     void createMemberModel(MemberModel member);
 
     MemberModel updateMemberModel(MemberModel memberModel);
 
