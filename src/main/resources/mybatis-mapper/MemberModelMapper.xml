@@ -16,12 +16,8 @@
     </insert>
 
     <update id="updateMemberModel">
-        update membertable set memberID =#{memberID},
-                               memberName =#{memberName},
-                               memberPhone =#{memberPhone},
-                               memberGender =#{memberGender},
-                               memberBirth =#{memberBirth}
-        where memberCodeNum = #{memberCodeNum}
+        update membertable set memberID =#{memberID}, memberName =#{memberName}, memberPhone =#{memberPhone}
+                               where memberCodeNum = #{memberCodeNum}
     </update>
 
     <delete id="deleteMemberModel">

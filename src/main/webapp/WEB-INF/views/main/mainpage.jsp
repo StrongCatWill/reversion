@@ -44,15 +44,23 @@
             margin: 100px;
         }
         thead{
+            /*font-family: Impact, Charcoal, sans-serif;*/
             border: 3px dotted #1f2029;
         }
         table{
             border: 3px solid #1f2029;
         }
-
         .select{
             background-color: #46A094;
             border: 0.5px solid black;
+        }
+        #outMemberCodeNum, #outMemberID, #outMemberName, #outMemberPhone, #outMemberGender, #outMemberBirth{
+            font-size: 18px;
+            color: #333333;
+        }
+        .update{
+            font-weight: bold;
+            font-size: large;
         }
     </style>
 </head>
@@ -62,7 +70,7 @@
 <div id="contents" align="center">
 
     <div id="tableDiv">
-        <table id="listTable">
+        <table id="listTable" width="70%">
             <thead>
 <%--                <tr>--%>
                 <th>memberCodeNum</th>
@@ -87,37 +95,52 @@
         <br><br><br>
         <h5><br>선택한 사용자의 세부 정보입니다. <br> 수정 버튼을 누르면 사용자 정보를 수정합니다. </h5>
         <hr>
-        <table id="detailTable" width="50%" border="1">
-            <thead>
+        <form>
+            <input type="hidden" value="" id="mode">
+            <table id="detailTable" width="70%" border="1">
+                <thead>
                 <tr>
                     <td>사용자의 memberCodeNum : </td>
-                    <td id="outMemberCodeNum"> </td>
+                    <td class="outMemberCodeNum"> </td>
+                    <td class="update">수정할 정보 입력</td>
+                    <td class="update_input">memberCode는 수정할 수 없습니다.</td>
                 </tr>
                 <tr>
                     <td>사용자의 ID : </td>
-                    <td id="outMemberID"> </td>
+                    <td class="outMemberID"> </td>
+                    <td class="update">수정할 ID 입력</td>
+                    <td class="update_input"><input type="text" id="updateID" width="100%" height="100%"></td>
                 </tr>
                 <tr>
                     <td>사용자의 이름 : </td>
-                    <td id="outMemberName"></td>
+                    <td class="outMemberName"></td>
+                    <td class="update">수정할 이름 입력</td>
+                    <td class="update_input"><input type="text" id="updateName" width="100%" height="100%"></td>
                 </tr>
                 <tr>
                     <td>사용자의 전화번호 : </td>
-                    <td id="outMemberPhone"> </td>
+                    <td class="outMemberPhone"> </td>
+                    <td class="update">수정할 전화번호 입력</td>
+                    <td class="update_input"><input type="text" id="updatePhone" width="100%" height="100%"></td>
                 </tr>
                 <tr>
                     <td>사용자의 성별 : </td>
-                    <td id="outMemberGender"></td>
+                    <td class="outMemberGender"></td>
+                    <td class="update"></td>
+                    <td class="update_input">성별은 수정할 수 없습니다.</td>
                 </tr>
                 <tr>
                     <td>사용자의 생일 : </td>
-                    <td id="outMemberBirth"></td>
+                    <td class="outMemberBirth"></td>
+                    <td class="update"></td>
+                    <td class="update_input">생일은 수정할 수 없습니다.</td>
                 </tr>
-            </thead>
-            <tbody>
+                </thead>
+                <tbody>
 
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </form>
 
 
         <button type="button" id="toUpdateMemberBtn">수정</button>
@@ -132,12 +155,12 @@
         <h4>회원 정보 수정</h4>
         <hr><br><br>
         <form id="updateForm" >
-            아이디는 수정할 수 없습니다 : <input type="text" name="id" autocomplete="on" placeholder="이전 아이디 : " value="<c:out value="${member.id}"></c:out>" ><br>
+            아이디는 수정할 수 없습니다 : <input type="text" name="id" autocomplete="on"  value="<c:out value="${member.id}"></c:out>" ><br>
             수정할 이름 : <input type="text" name="nm" autocomplete="off" placeholder="이전 이름 : " value="<c:out value="${member.name}"></c:out>" ><br>
             수정할 나이 : <input type="text" name="age" autocomplete="off" placeholder="이전 나이 : " value="<c:out value="${member.age}"></c:out>" ><br>
             수정할 전화번호 : <input type="text" name="phone" autocomplete="off" placeholder="이전 전화번호 : " value="<c:out value="${member.phone}"></c:out>" ><br>
 
-            <button type="submit" id="saveBtnUpdateForm">수정</button>
+            <button type="submit" id="saveBtnUpdateForm">사용자 정보 수정</button>
             <button type="reset" id="goMainFromUpdate">수정하지 않고 메인으로 이동</button>
 <%--            <button type="button" id="DeleteMemberBtn">선택한 사용자 삭제</button><br><br>--%>
         </form>
@@ -171,10 +194,14 @@
     <button type="button" id="toTopButn">
         To page top
     </button>
+    <button type="button" id="goDetail">
+        Detail Member
+    </button>
 </div>
 
 
 <script src="https://code.jquery.com/jquery-3.6.3.js" integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
+</body>
 <script>
 
     $(function() {
@@ -182,31 +209,13 @@
         $("#form-div").hide();
         $("#detailDiv").hide();
         $("#updateMember").hide();
-
-        // $("#tbody > tr").on("mouseover", 'tr', function(){
-        //
-        // })
-
-        $("tbody > tr").click(function(){
-            $(this).addClass("select");
-            console.log('this -----------------> this : ',$(this) );
-            //여기는 선택된 셀 앞에서 클릭을 했을 때, 수정 페이지로 넘어가는 화면. 이건 숨긴 데이터를 보여주는 걸로 만들어야 함.
-            $(".select").click(function (data){
-
-                // getDetagil();
-                $("#detailDiv").show();
-                $("#goAddMamber").hide();
-
-            });
-        })
-
-
     });
 
+    // $("#tbody").on("click", "tr", function(){
+    //     alert($(this).find($("tr")) + "클릭됨");
+    // })
 
     function Mainlist(){
-
-        //$("#tableDiv").show();
 
         $.ajax({
             url:"./main/list",
@@ -218,11 +227,10 @@
 
                 $.each(result, function(index, item){
 
-
                     let tr = $('<tr/>', {
-                        class : 'table_tr',
-                        // class : null
+                        class : 'target',
                     });
+
                     let td_memberCodeNum =$('<td/>',{
                         text : item.memberCodeNum,
                     });
@@ -258,67 +266,173 @@
                 });
             }
         });
-
-
     }
-
-
-
-    $("tr").mouseleave(function (e) {
-        $(this).removeClass("select");
-    });
 
 
     $("#goAddMamber").click(function(){
         $("#form-div").show();
-
         $("#goAddMamber").hide();
-
     });
 
 
-    //클릭한 멤버 값 받아주는 것.
-    function getDetail(){
 
-        let memberCodeNum = $(this).memberCodeNum.val();
-        let memberID = $(this).memberID.val();
-        let memberName = $(this).memberName.val();
-        let memberPhone = $(this).memberPhone.val();
-        let memberGender = $(this).memberGender.val();
-        let memberBirth = $(this).memberBirth.val();
+    $("#goDetail").click(function detail(e){
+        $("#detailDiv").show();
 
-        // let data = {
-        //     "memberCodeNum" :memberCodeNum,
-        //     "memberID" :memberID,
-        //     "memberName" :memberName,
-        //     "memberPhone" : memberPhone,
-        //     "memberGender" :memberGender,
-        //     "memberBirth" :memberBirth
-        // }
+        //detail에서 타고 넘어가야 하는 수정 관련 클래스와 버튼들.
+        $("#toMainBtn").hide();
+        $(".update").hide();
+        $(".update_input").hide();
 
-        $("#outMemberCodeNum").text(memberCodeNum);
-        $("#outMemberID").text(memberID);
-        $("#outMemberName").text(memberName);
-        $("#outMemberPhone").text(memberPhone);
-        $("#outMemberGender").text(memberGender);
-        $("#outMemberBirth").text(memberBirth);
+        $(".target").bind({
+            mouseenter : function addSelect(){
+                $(this).addClass("select");
+                //버블링 멈추고 싶은데 밖에서 따로 제어하는 법을 모른다.
+                // if($(this).click){
+                //     if($("#toUpdateMemberBtn").click){
+                //         if($("#toMainBtn").click){
+                //             addSelect().stop();
+                //         }
+                //     }
+                // }
 
-    }
+            },  mouseleave : function(){
+                $(this).removeClass("select");
+            },  click : function(){
 
-    $("#toMainBtn").click(function(){
-        $("#detailDiv").hide();
-        $("#goAddMamber").show();
+
+                const data01 = $(this).children().eq(0).text(); //memberCodeNum
+                alert(data01);
+                const data02 = $(this).children().eq(1).text(); //memberID
+                const data03 = $(this).children().eq(2).text(); //memberName
+                const data04 = $(this).children().eq(3).text(); //memberPhone
+                const data05 = $(this).children().eq(4).text(); //memberGender
+                const data06 = $(this).children().eq(5).text(); //memberBirth
+
+                getDetail(data01, data02, data03, data04, data05, data06);
+            }
+        })
+
+        // update member(수정 버튼) 클릭한 경우, 여기서는 데이터베이스와 통해야 함. 위에서 선언한 데이터를 그대로 사용하기 위해 여기다가 선언했다
+        $("#toUpdateMemberBtn").click(function(){
+            // $("#updateMember").show(); //따로 만든 폼이었는데, 이거 없이 표 안에서 수정해보려고 주석 처리해줌.
+            $(".update").show();    //update용 td 출력
+            $(".update_input").show(); //update input 태그가 담기거나, 안내사항 출력
+            $("#toMainBtn").show(); //수정하지 않고 목록으로 버튼 보여주기, 그냥 디테일만 조회할 때는 수정에 관한 로직이 끼어들면 안되니까 이렇게 처리
+
+            const data01 =$("#outMemberCodeNum").text();
+            const data02 = $("#outMemberID").text();
+            const data03 = $("#outMemberName").text();
+            const data04 = $("#outMemberPhone").text();
+            if( $("#mode").val() === "" ){
+                $("#mode").val( "A" );
+            }else{
+                //updateMember 처리를 여기서 함.
+                updateMember(data01, data02, data03, data04);
+            }
+
+        });
 
 
     })
 
+    //클릭한 멤버 값 받아서 detail 창에 띄워주는 기능. ajax call X
+    function getDetail(data01, data02, data03, data04, data05, data06){
+
+        let memberCodeNum = data01;
+        let memberID = data02;
+        let memberName = data03;
+        let memberPhone = data04;
+        let memberGender = data05;
+        let memberBirth = data06;
+
+
+        $(".outMemberCodeNum").text(memberCodeNum);
+        $(".outMemberID").text(memberID);
+        $(".outMemberName").text(memberName);
+        $(".outMemberPhone").text(memberPhone);
+        $(".outMemberGender").text(memberGender);
+        $(".outMemberBirth").text(memberBirth);
+    }
+
+
+    //getDetail 후, 수정 눌렀을 때 ajax 콜, 컨트롤러 처리를 위한 함수.
+    function updateMember(data01, data02, data03, data04){
+        console.log(data01); //null로 찍힘 .왜?!
+        data01 = $(".outMemberCodeNum").text();
+        let outMemberCodeNum = data01;
+
+        let preID = data02; //바꿀 거랑 비교해줘야 하니까 여기 따로 변수 선언함. 얘들도 null로 들어왔을 가능성 농후함.
+        let preName = data03;
+        let prephone = data04;
+
+        //update할 때, memberCodeNum을 PK로 잡고 들어가서 수정하는데, 그게 안 넘어가서 SQL 에러가 나는 것 같음
+        alert(outMemberCodeNum);
+        let updateID = $("#updateID").val().trim();
+        let updateName = $("#updateName").val().trim();
+        let updatePhone = $("#updatePhone").val().trim();
+
+        let data = {
+            "memberCodeNum" : outMemberCodeNum,
+            "memberID" : (updateID!=null) ? updateID : preID,
+            "memberName" : (updateName!=null) ? updateName : preName,
+            "memberPhone" : (updatePhone!=null) ? updatePhone
+                            :(updatePhone.length()!=11) ? updatePhone : alert("11자리 전화번호 입력하세요. ")
+
+        }
+
+            $.ajax({
+                url:"/main/update",
+                type:"post",
+                data: JSON.stringify(data),
+                dataType:"json",
+                contentType:"application/json",
+                async : false,
+
+                success :function(data, response){
+                    console.log("data.updateID ------------------------------>"+data.memberID);
+
+                    $(".update").hide();
+                    $(".update_input").hide();
+
+                    $('#tableDiv').empty();
+                    $("mode").val("");
+                    Mainlist();
+                }
+            })
+    }
+
+    $("#toMainBtn").click(function(){
+        //시작 버튼으로 눌렀으니까, 멤버 호출하는 건 그만해주기.
+
+        //입력되어있던 input값 지워주기.
+        $("#updateID").val("");
+        $("#updateName").val("");
+        $("#updatePhone").val("");
+        $("#mode").val("");
+
+        $("#detailDiv").hide();
+        $("#goAddMamber").show();
+
+    })
+
     $("#resetBtn").click(function(){
+
+        //입력한 값 지워주기.
+        $("#memberID").val("");
+        $("#memberName").val("");
+        $("#memberPhone").val("");
+        $("#memberGender").val("");
+        $("#memberBirth").val("");
+
         $("#form-div").hide();
+
         console.log("resetBtn 클릭됨. 저장하지 않고 addMember 폼 닫힘. ");
         $("#goAddMamber").show();
     })
 
 
+    //create member용
     $("#saveMember").click(function(){
 
         $("#form-div").hide();
@@ -337,7 +451,7 @@
             "memberPhone" : memberPhone,
             "memberGender" :    (memberGender== "M") ?  memberGender :
                                 (memberGender == "F" )? memberGender :
-                                    alert("조건에 맞게 젠더를 입력하세용"),
+                                alert("Gender must be M or F"),
             "memberBirth" :memberBirth
         }
 
@@ -359,18 +473,13 @@
                 Mainlist();
                 $("#goAddMamber").show();
 
-                },
+            },
             error:function(error){
                 alert('데이터 값이 확인되지 않음'+error);
                 $("#goAddMamber").show();
             }
         });
     });
-
-    //테이블 클릭하면 디테일 보여주고 그걸 show member detail 페이지로 띄워주는 걸 만들려고 함. td의 text나 area가 클릭 가능하게 바뀌어야 한다.
-    function tableClick(){
-        alert("클릭됨");
-    }
 
     //맨 처음으로 이동하는 함수.
     $("#toTopButn").click(function(){
@@ -380,14 +489,5 @@
         }, 500);
     });
 
-
-
-
-
-
-
-
-
 </script>
-</body>
 </html>

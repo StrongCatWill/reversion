@@ -28,6 +28,5 @@
     <update id="updateMember">
         update test_for_testuser set name =#{name},age =#{age},phone =#{phone}
         where id = #{id}
-
     </update>
 </mapper>

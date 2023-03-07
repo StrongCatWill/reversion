@@ -95,4 +95,26 @@ public String modify(Model model, @RequestParam(name = "memberID", required = tr
         }
         return mav;
     }
+
+    //update 기능 구현
+    @GetMapping("/main/update")
+    public ModelAndView update(){
+        ModelAndView modelAndView = new ModelAndView("/main/add");
+        return modelAndView;
+    }
+
+    @PostMapping("/main/update")
+    public ModelAndView updateController(@RequestBody MemberModel memberModel){
+
+        ModelAndView mav = new ModelAndView("/main/update");
+
+        try{
+            System.out.print("변경되는 memberModel 값 확인 ----------------------> "+memberModel.getMemberCodeNum()+" ," +memberModel.getMemberID()+ " , "+memberModel.getMemberName()+ " , "+memberModel.getMemberPhone());
+            memberModelService.updateMemberModel(memberModel);
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            return mav;
+        }
+    }
 }

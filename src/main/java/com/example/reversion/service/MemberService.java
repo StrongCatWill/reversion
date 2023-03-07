@@ -58,7 +58,6 @@ public class MemberService {
         }
 
         return memberMapper.getMember(id);
-
     }
 
     public int deleteMember(int id) {

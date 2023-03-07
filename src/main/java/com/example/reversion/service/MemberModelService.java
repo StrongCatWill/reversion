@@ -5,7 +5,6 @@ import com.example.reversion.model.MemberModel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -33,25 +32,19 @@ public class MemberModelService {
         member.setMemberGender(memberModel.getMemberGender());
         member.setMemberBirth(memberModel.getMemberBirth());
 
-
-
         memberMapper2.createMemberModel(member);
-
     }
 
-    public MemberModel updateMemberModel(String memberID,
-                                         String memberName, String memberPhone,
-                                         Character memberGender, Date memberBirth){
+    public void updateMemberModel(MemberModel memberModel){
 
-        MemberModel memberModel = new MemberModel();
+        MemberModel member = new MemberModel();
 
-        memberModel.setMemberID(memberID);
-        memberModel.setMemberName(memberName);
-        memberModel.setMemberPhone(memberPhone);
-        memberModel.setMemberGender(memberGender);
-        memberModel.setMemberBirth(memberBirth);
+        member.setMemberCodeNum(memberModel.getMemberCodeNum());
+        member.setMemberID(memberModel.getMemberID());
+        member.setMemberName(memberModel.getMemberName());
+        member.setMemberPhone(memberModel.getMemberPhone());
 
-        return memberMapper2.updateMemberModel(memberModel);
+        memberMapper2.updateMemberModel(member);
     }
 
     public MemberModel CheckMemberModel(String memberID){
