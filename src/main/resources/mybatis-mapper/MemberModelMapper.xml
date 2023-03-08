@@ -23,6 +23,6 @@
 <!--    pk를 삭제하면 row를 삭제할 수 있다. -->
     <delete id="deleteMemberModel">
         delete from membertable
-        where memberID = #{memberID}
+        where memberCodeNum = #{memberCodeNum}
     </delete>
 </mapper>

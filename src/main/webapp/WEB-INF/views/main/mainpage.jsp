@@ -503,36 +503,40 @@
 
     function deleteMemberConfirm(data01, data03){
 
-        var DeleteConfirm = confirm(data03+"이 사용자를 삭제하시겠습니까?");
+        var DeleteConfirm = confirm(data03+" 사용자를 삭제하시겠습니까?");
 
         if(DeleteConfirm==true){
             alert("확인을 눌렀습니다.\n"+data03+"사용자 삭제 진행");
             deleteMember(data01);
         }else{
-            alert("취소를 눌렀습니다.");
+            alert("취소.");
         }
     }
 
     function deleteMember(data01){
         // alert("전달받은 입력값 확인 -->" +data01);
 
+        let data = {
+            "memberCodeNum" : data01,
+        }
         $.ajax({
+
             url:"/main/delete",
             type:"post",
-
-            data: (data01),
+            //data01은 text타입으로 들어왔다.
+            data:JSON.stringify(data),
             dataType:"json",
             contentType:"application/json",
 
             success :function(data, response){
                 $("#form-div").hide();
+
                 $("#tbody").empty();
-                $("mode").val(null);
                 Mainlist();
 
-            },error:function(error){
+            },error:function(data, error){
 
-                alert('에러 발생 :: '+error);
+                alert('에러 발생 :: '+error + "넘어온 데이터 확인 " + data.memberID);
                 $("#form-div").hide();
 
             }
