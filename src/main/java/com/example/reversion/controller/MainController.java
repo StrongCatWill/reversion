@@ -103,7 +103,7 @@ public class MainController {
     }
 
     @PostMapping("/main/update")
-    public void updateController(@RequestBody MemberModel memberModel){
+    public ResponseEntity<MemberModel> updateController(@RequestBody MemberModel memberModel){
 
         ModelAndView mav = new ModelAndView("/main/update");
 
@@ -113,6 +113,6 @@ public class MainController {
         }catch (Exception e){
             e.printStackTrace();
         }
-//        return ResponseEntity.ok(memberModel);
+        return ResponseEntity.ok(memberModel);
     }
 }

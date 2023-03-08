@@ -144,26 +144,11 @@
 
 
         <button type="button" id="toUpdateMemberBtn">수정</button>
+        <button type="button" id="submitUpdate">수정</button>
         <button type="button" id="toMainBtn">수정하지 않고 목록으로</button>
-        <button type="button" id="DeleteMemberBtn">선택한 사용자 삭제</button><br><br>
+        <button type="button" id="DeleteMemberBtn">선택한 사용자 삭제</button>
+        <button type="button" id="closeDetailDiv">창 닫기</button><br><br>
         <br><br>
-    </div>
-
-
-    <div id="updateMember">
-        <br>
-        <h4>회원 정보 수정</h4>
-        <hr><br><br>
-        <form id="updateForm" >
-            아이디는 수정할 수 없습니다 : <input type="text" name="id" autocomplete="on"  value="<c:out value="${member.id}"></c:out>" ><br>
-            수정할 이름 : <input type="text" name="nm" autocomplete="off" placeholder="이전 이름 : " value="<c:out value="${member.name}"></c:out>" ><br>
-            수정할 나이 : <input type="text" name="age" autocomplete="off" placeholder="이전 나이 : " value="<c:out value="${member.age}"></c:out>" ><br>
-            수정할 전화번호 : <input type="text" name="phone" autocomplete="off" placeholder="이전 전화번호 : " value="<c:out value="${member.phone}"></c:out>" ><br>
-
-            <button type="submit" id="saveBtnUpdateForm">사용자 정보 수정</button>
-            <button type="reset" id="goMainFromUpdate">수정하지 않고 메인으로 이동</button>
-<%--            <button type="button" id="DeleteMemberBtn">선택한 사용자 삭제</button><br><br>--%>
-        </form>
     </div>
 
 
@@ -195,9 +180,6 @@
     <button type="button" id="toTopButn">
         To page top
     </button>
-    <button type="button" id="goDetail">
-        Detail Member
-    </button>
 </div>
 
 
@@ -209,7 +191,7 @@
         Mainlist();
         $("#form-div").hide();
         $("#detailDiv").hide();
-        $("#updateMember").hide();
+        // $("#updateMember").hide();
     });
 
     function Mainlist(){
@@ -267,53 +249,39 @@
     }
 
 
-    $("#goAddMamber").click(function(){
-        $("#form-div").show();
-        $("#goAddMamber").hide();
+    //제대로 기능중임.
+    $(document).on("mouseenter", ".target", function(){
+            $(this).addClass("select");
     });
 
+    $(document).on("mouseleave", ".select", function(){
+        $(this).removeClass("select");
+    });
 
+    $(document).on("click", ".select", function(){
 
-    $("#goDetail").click(function detail(e){
+        const data01 = $(this).children().eq(0).text(); //memberCodeNum
+        // alert(data01);
+        const data02 = $(this).children().eq(1).text(); //memberID
+        const data03 = $(this).children().eq(2).text(); //memberName
+        const data04 = $(this).children().eq(3).text(); //memberPhone
+        const data05 = $(this).children().eq(4).text(); //memberGender
+        const data06 = $(this).children().eq(5).text(); //memberBirth
+
+        getDetail(data01, data02, data03, data04, data05, data06);
+
         $("#detailDiv").show();
 
         //detail에서 타고 넘어가야 하는 수정 관련 클래스와 버튼들.
+        $("#submitUpdate").hide();
         $("#toMainBtn").hide();
         $(".update").hide();
         $(".update_input").hide();
 
-        $(".target").bind({
-            mouseenter : function addSelect(){
-                $(this).addClass("select");
-                //버블링 멈추고 싶은데 밖에서 따로 제어하는 법을 모른다.
-                // if($(this).click){
-                //     if($("#toUpdateMemberBtn").click){
-                //         if($("#toMainBtn").click){
-                //             addSelect().stop();
-                //         }
-                //     }
-                // }
 
-            },  mouseleave : function(){
-                $(this).removeClass("select");
-            },  click : function(){
-
-
-                const data01 = $(this).children().eq(0).text(); //memberCodeNum
-                // alert(data01);
-                const data02 = $(this).children().eq(1).text(); //memberID
-                const data03 = $(this).children().eq(2).text(); //memberName
-                const data04 = $(this).children().eq(3).text(); //memberPhone
-                const data05 = $(this).children().eq(4).text(); //memberGender
-                const data06 = $(this).children().eq(5).text(); //memberBirth
-
-                getDetail(data01, data02, data03, data04, data05, data06);
-            }
-        })
-
-        // update member(수정 버튼) 클릭한 경우, 여기서는 데이터베이스와 통해야 함. 위에서 선언한 데이터를 그대로 사용하기 위해 여기다가 선언했다
+        //선택된 값을 가지고 update를 하는 것.
         $("#toUpdateMemberBtn").click(function(){
-            // $("#updateMember").show(); //따로 만든 폼이었는데, 이거 없이 표 안에서 수정해보려고 주석 처리해줌.
+
             $(".update").show();    //update용 td 출력
             $(".update_input").show(); //update input 태그가 담기거나, 안내사항 출력
             $("#toMainBtn").show(); //수정하지 않고 목록으로 버튼 보여주기, 그냥 디테일만 조회할 때는 수정에 관한 로직이 끼어들면 안되니까 이렇게 처리
@@ -324,14 +292,38 @@
             const data04 = $("#outMemberPhone").text();
 
             //같은 updateMember 버튼을 쓰고 있었다. 같은 버튼에서 기능을 가르는 방법으로 만든 분기문.
-            if( $("#mode").val() === "" ){
-                $("#mode").val( "A" );
+            if( $("#mode").val() === null ){
+                $("$mode").val(" A ");
             }else{
-                //updateMember 처리를 여기서 함.
-                updateMember(data01, data02, data03, data04);
+
+                    //스크롤 이동시키기. 이미 데이터가 넘어왔어야 여기로 이동한다.
+                    let locationUpdate = document.querySelector("#toMainBtn").offsetTop;
+                    window.scrollTo({
+                        top:locationUpdate, behavior:"smooth"
+                    })
+
+                    //수정하기 버튼 보여주고
+                    $("#submitUpdate").show();
+                    $("#toUpdateMemberBtn").hide();
+
+                    //수정 버튼을 눌렀을 때 수정 진행
+                    $("#submitUpdate").click(function(){
+                        //updateMember 처리를 여기서 함.
+                        updateMember(data01, data02, data03, data04);
+                    })
+
             }
         });
+    });
+
+    $("#closeDetailDiv").click(function(){
+        $("#detailDiv").hide();
     })
+
+    $("#goAddMamber").click(function(){
+        $("#form-div").show();
+        $("#goAddMamber").hide();
+    });
 
     //클릭한 멤버 값 받아서 detail 창에 띄워주는 기능. ajax call X
     function getDetail(data01, data02, data03, data04, data05, data06){
@@ -355,8 +347,15 @@
 
     //getDetail 후, 수정 눌렀을 때 ajax 콜, 컨트롤러 처리를 위한 함수.
     function updateMember(data01, data02, data03, data04){
-        console.log(data01);
+
+        $(".update").show();    //update용 td 출력
+        $(".update_input").show(); //update input 태그가 담기거나, 안내사항 출력
+        $("#toMainBtn").show(); //수정하지 않고 목록으로 버튼 보여주기, 그냥 디테일만 조회할 때는 수정에 관한 로직이 끼어들면 안되니까 이렇게 처리
+
+
+        console.log("updateMember------------------------------------------>"+data01);
         data01 = $(".outMemberCodeNum").text();
+
         let outMemberCodeNum = data01;
 
         let preID = data02; //바꿀 거랑 비교해줘야 하니까 여기 따로 변수 선언함. 얘들도 null로 들어왔을 가능성 농후함.
@@ -369,6 +368,8 @@
         let updateName = $("#updateName").val().trim();
         let updatePhone = $("#updatePhone").val().trim();
 
+        // //로직 검사에 쓸 데이터
+        // alert("업데이트할 데이터가 들어오지 않았음. 데이터를 입력하고 시도하세요.");
         let data = {
             "memberCodeNum" : outMemberCodeNum,
             "memberID" : (updateID!=null) ? updateID : preID,
@@ -387,13 +388,10 @@
                 async : false,
 
                 success :function(data, response){
-                    console.log("data.updateID ------------------------------>"+data.memberID);
 
-                    $(".update").hide();
-                    $(".update_input").hide();
-
-                    $('#tableDiv').empty();
-                    $("mode").val("");
+                    $("#detailDiv").hide();
+                    $("#tbody").empty();
+                    $("mode").val(null);
                     Mainlist();
                 }
             })
@@ -415,17 +413,9 @@
 
     $("#resetBtn").click(function(){
 
-        //입력한 값 지워주기.
-        $("#memberID").val("");
-        $("#memberName").val("");
-        $("#memberPhone").val("");
-        $("#memberGender").val("");
-        $("#memberBirth").val("");
-
-        $("#form-div").hide();
+        initAddForm();
 
         console.log("resetBtn 클릭됨. 저장하지 않고 addMember 폼 닫힘. ");
-        $("#goAddMamber").show();
     })
 
 
@@ -465,30 +455,37 @@
             success :function(data, response){
 
                 console.log(data);
+                initAddForm();
                 $("#form-div").hide();
-                // $('#tableDiv').empty();
-                // $("#tableDiv").show();
                 Mainlist();
-
-                $("#goAddMamber").show();
             },
             error:function(error){
                 alert('에러 발생 :: '+error);
 
-                // $('#tableDiv').empty();
-                // $("#tableDiv").show();
-                // Mainlist();
                 $("#form-div").hide();
-                $("#goAddMamber").show();
+                initAddForm();
             }
         });
     });
+
+    //add 창에서 저장하거나, 저장하지 않을 때 폼의 input 태그 내 입력값을 지우고 form div를 지우는 함수
+    function initAddForm(){
+        $("#memberID").val("");
+        $("#memberName").val("");
+        $("#memberPhone").val("");
+        $("#memberGender").val("");
+        $("#memberBirth").val("");
+
+        $("#form-div").hide();
+        $("#goAddMamber").show();
+    }
 
     //맨 처음으로 이동하는 함수.
     $("#toTopButn").click(function(){
         window.scrollTo(0,0);
         $("html, body").animate({
-            scrollTop:0
+            scrollTop:0,
+            behavior:"smooth"
         }, 500);
     });
 </script>
