@@ -50,7 +50,7 @@ public class MainController {
 //    @RequestMapping(value = "/main/add", method = RequestMethod.POST)
     @PostMapping("/main/add")
     public ResponseEntity<MemberModel> addForm(@RequestBody MemberModel memberModel){
-        System.out.println("regist -------------------------> ");
+
         try{
             memberModelService.createMemberModel(memberModel);
         }catch (Exception e){
@@ -58,13 +58,12 @@ public class MainController {
         }
 
         return ResponseEntity.ok(memberModel);
-//        return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
     }
 
 
 //    디테일 보여주는 페이지 컨트롤러, 이건 넘어오는 다른 페이지의 데이터가 없는 대신, hover된 데이터를 보여주는 것임.
-@RequestMapping("/main/detail")
-public String modify(Model model, @RequestParam(name = "memberID", required = true) String memberID){
+    @RequestMapping("/main/detail")
+    public String modify(Model model, @RequestParam(name = "memberID", required = true) String memberID){
 
     MemberModel memberModel = memberModelService.getMemberModel(memberID);
 
@@ -104,7 +103,7 @@ public String modify(Model model, @RequestParam(name = "memberID", required = tr
     }
 
     @PostMapping("/main/update")
-    public ModelAndView updateController(@RequestBody MemberModel memberModel){
+    public ResponseEntity<MemberModel> updateController(@RequestBody MemberModel memberModel){
 
         ModelAndView mav = new ModelAndView("/main/update");
 
@@ -113,8 +112,7 @@ public String modify(Model model, @RequestParam(name = "memberID", required = tr
             memberModelService.updateMemberModel(memberModel);
         }catch (Exception e){
             e.printStackTrace();
-        }finally {
-            return mav;
         }
+        return ResponseEntity.ok(memberModel);
     }
 }

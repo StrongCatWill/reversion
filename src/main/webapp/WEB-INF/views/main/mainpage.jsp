@@ -188,6 +188,7 @@
     </div>
 
     <hr>
+    <br><br>
     <button type="button" id="goAddMamber">
         addMember
     </button>
@@ -210,10 +211,6 @@
         $("#detailDiv").hide();
         $("#updateMember").hide();
     });
-
-    // $("#tbody").on("click", "tr", function(){
-    //     alert($(this).find($("tr")) + "클릭됨");
-    // })
 
     function Mainlist(){
 
@@ -302,7 +299,7 @@
 
 
                 const data01 = $(this).children().eq(0).text(); //memberCodeNum
-                alert(data01);
+                // alert(data01);
                 const data02 = $(this).children().eq(1).text(); //memberID
                 const data03 = $(this).children().eq(2).text(); //memberName
                 const data04 = $(this).children().eq(3).text(); //memberPhone
@@ -324,16 +321,15 @@
             const data02 = $("#outMemberID").text();
             const data03 = $("#outMemberName").text();
             const data04 = $("#outMemberPhone").text();
+
+            //같은 updateMember 버튼을 쓰고 있었다. 같은 버튼에서 기능을 가르는 방법으로 만든 분기문.
             if( $("#mode").val() === "" ){
                 $("#mode").val( "A" );
             }else{
                 //updateMember 처리를 여기서 함.
                 updateMember(data01, data02, data03, data04);
             }
-
         });
-
-
     })
 
     //클릭한 멤버 값 받아서 detail 창에 띄워주는 기능. ajax call X
@@ -358,7 +354,7 @@
 
     //getDetail 후, 수정 눌렀을 때 ajax 콜, 컨트롤러 처리를 위한 함수.
     function updateMember(data01, data02, data03, data04){
-        console.log(data01); //null로 찍힘 .왜?!
+        console.log(data01);
         data01 = $(".outMemberCodeNum").text();
         let outMemberCodeNum = data01;
 
@@ -367,7 +363,7 @@
         let prephone = data04;
 
         //update할 때, memberCodeNum을 PK로 잡고 들어가서 수정하는데, 그게 안 넘어가서 SQL 에러가 나는 것 같음
-        alert(outMemberCodeNum);
+        // alert(outMemberCodeNum);
         let updateID = $("#updateID").val().trim();
         let updateName = $("#updateName").val().trim();
         let updatePhone = $("#updatePhone").val().trim();
@@ -467,12 +463,12 @@
             async : false,
             success :function(data, response){
 
-                console.log(response);
-                alert("입력값 아이디만 확인"+data.memberID);
+                console.log(data);
                 $('#tableDiv').empty();
+                $("#tableDiv").show();
                 Mainlist();
-                $("#goAddMamber").show();
 
+                $("#goAddMamber").show();
             },
             error:function(error){
                 alert('데이터 값이 확인되지 않음'+error);
@@ -488,6 +484,5 @@
             scrollTop:0
         }, 500);
     });
-
 </script>
 </html>
