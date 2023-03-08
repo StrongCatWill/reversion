@@ -32,7 +32,8 @@ public class MemberModelService {
         member.setMemberGender(memberModel.getMemberGender());
         member.setMemberBirth(memberModel.getMemberBirth());
 
-        memberMapper2.createMemberModel(member);
+        memberMapper2.createMemberModel(member); //return type == void 경우
+//        return memberMapper2.createMemberModel(member);
     }
 
     public void updateMemberModel(MemberModel memberModel){

@@ -14,9 +14,9 @@ public interface MemberMapper_2 {
 
 
 
-     void createMemberModel(MemberModel member);
+    void createMemberModel(MemberModel member);
 
-    MemberModel updateMemberModel(MemberModel memberModel);
+    void updateMemberModel(MemberModel memberModel);
 
     int deleteMemberModel(String memberID);
 

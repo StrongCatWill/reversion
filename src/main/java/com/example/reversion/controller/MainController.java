@@ -56,7 +56,6 @@ public class MainController {
         }catch (Exception e){
             e.printStackTrace();
         }
-
         return ResponseEntity.ok(memberModel);
     }
 
@@ -91,6 +90,7 @@ public class MainController {
         }finally {
             System.out.println("확인된 ID:" + memberID);
             System.out.println(model);
+
         }
         return mav;
     }
@@ -103,7 +103,7 @@ public class MainController {
     }
 
     @PostMapping("/main/update")
-    public ResponseEntity<MemberModel> updateController(@RequestBody MemberModel memberModel){
+    public void updateController(@RequestBody MemberModel memberModel){
 
         ModelAndView mav = new ModelAndView("/main/update");
 
@@ -113,6 +113,6 @@ public class MainController {
         }catch (Exception e){
             e.printStackTrace();
         }
-        return ResponseEntity.ok(memberModel);
+//        return ResponseEntity.ok(memberModel);
     }
 }

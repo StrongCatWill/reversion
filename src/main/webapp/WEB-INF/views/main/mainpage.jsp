@@ -65,7 +65,7 @@
     </style>
 </head>
 <body>
-<h1 align="center">Member List Table</h1>
+<h1 align="center">Member List Table</h1><br><br>
 
 <div id="contents" align="center">
 
@@ -223,6 +223,7 @@
                 console.log(result)
 
                 $.each(result, function(index, item){
+
 
                     let tr = $('<tr/>', {
                         class : 'target',
@@ -460,18 +461,24 @@
             data: JSON.stringify(data),
             dataType:"json",
             contentType:"application/json",
-            async : false,
+            // async : false,
             success :function(data, response){
 
                 console.log(data);
-                $('#tableDiv').empty();
-                $("#tableDiv").show();
+                $("#form-div").hide();
+                // $('#tableDiv').empty();
+                // $("#tableDiv").show();
                 Mainlist();
 
                 $("#goAddMamber").show();
             },
             error:function(error){
-                alert('데이터 값이 확인되지 않음'+error);
+                alert('에러 발생 :: '+error);
+
+                // $('#tableDiv').empty();
+                // $("#tableDiv").show();
+                // Mainlist();
+                $("#form-div").hide();
                 $("#goAddMamber").show();
             }
         });
