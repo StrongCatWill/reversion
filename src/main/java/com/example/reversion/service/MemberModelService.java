@@ -59,7 +59,8 @@ public class MemberModelService {
         return memberMapper2.getMemberModel(memberID);
     }
 
-    public int deleteMemberModel(String memberID){
-        return memberMapper2.deleteMemberModel(memberID);
+    public void deleteMemberModel(Integer memberCodeNum){
+
+        memberMapper2.deleteMemberModel(memberCodeNum);
     }
 }

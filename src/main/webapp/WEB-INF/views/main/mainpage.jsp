@@ -272,6 +272,7 @@
 
         $("#detailDiv").show();
 
+
         //detail에서 타고 넘어가야 하는 수정 관련 클래스와 버튼들.
         $("#submitUpdate").hide();
         $("#toMainBtn").hide();
@@ -311,9 +312,17 @@
                         //updateMember 처리를 여기서 함.
                         updateMember(data01, data02, data03, data04);
                     })
-
             }
         });
+
+
+        $("#DeleteMemberBtn").click(function(){
+            //어차피 confirm을 받으니, 여기서 데이터를 넘겨줘도 괜찮지 않을까?
+            deleteMemberConfirm(data01,data03);
+            deleteMember(data01); //data01 =  const data01 = $(this).children().eq(0).text(); //memberCodeNum
+            // 1. 이름을 지정해서 confrim에 이름 + "을 삭제하시겠습니까?" 물어볼 수 있어야 함, DeleteMemberConfirm에 넘어가는 값은 const data03 = $(this).children().eq(2).text(); //memberName 값, 선택된 trd의 이름이다.
+            // 2. yes 눌렸을 때, 실제적인 ajax call이 들어가야 함. -->deleteMember
+        })
     });
 
     $("#closeDetailDiv").click(function(){
@@ -342,6 +351,8 @@
         $(".outMemberPhone").text(memberPhone);
         $(".outMemberGender").text(memberGender);
         $(".outMemberBirth").text(memberBirth);
+
+        //여기에 delete로 넘겨줄 memberCodeNum가 있으니 delete의 실제적인 펑션을 넣어야 함.
     }
 
 
@@ -488,5 +499,45 @@
             behavior:"smooth"
         }, 500);
     });
+
+
+    function deleteMemberConfirm(data01, data03){
+
+        var DeleteConfirm = confirm(data03+"이 사용자를 삭제하시겠습니까?");
+
+        if(DeleteConfirm==true){
+            alert("확인을 눌렀습니다.\n"+data03+"사용자 삭제 진행");
+            deleteMember(data01);
+        }else{
+            alert("취소를 눌렀습니다.");
+        }
+    }
+
+    function deleteMember(data01){
+        // alert("전달받은 입력값 확인 -->" +data01);
+
+        $.ajax({
+            url:"/main/delete",
+            type:"post",
+
+            data: (data01),
+            dataType:"json",
+            contentType:"application/json",
+
+            success :function(data, response){
+                $("#form-div").hide();
+                $("#tbody").empty();
+                $("mode").val(null);
+                Mainlist();
+
+            },error:function(error){
+
+                alert('에러 발생 :: '+error);
+                $("#form-div").hide();
+
+            }
+        })
+    }
+
 </script>
 </html>

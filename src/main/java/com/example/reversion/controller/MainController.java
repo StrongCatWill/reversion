@@ -98,7 +98,7 @@ public class MainController {
     //update 기능 구현
     @GetMapping("/main/update")
     public ModelAndView update(){
-        ModelAndView modelAndView = new ModelAndView("/main/add");
+        ModelAndView modelAndView = new ModelAndView("/main/update");
         return modelAndView;
     }
 
@@ -110,6 +110,27 @@ public class MainController {
         try{
             System.out.print("변경되는 memberModel 값 확인 ----------------------> "+memberModel.getMemberCodeNum()+" ," +memberModel.getMemberID()+ " , "+memberModel.getMemberName()+ " , "+memberModel.getMemberPhone());
             memberModelService.updateMemberModel(memberModel);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok(memberModel);
+    }
+
+
+    //delete 기능 구현
+    @GetMapping("/main/delete")
+    public ModelAndView delete(){
+        ModelAndView modelAndView = new ModelAndView("/main/delete");
+        return modelAndView;
+    }
+
+    @PostMapping("/main/delete")
+    public ResponseEntity<MemberModel> deleteController(@RequestBody MemberModel memberModel){
+        ModelAndView mav = new ModelAndView("/main/delete");
+
+        try{
+            System.out.println("삭제되는 memberCodeNum ---------> "+memberModel.getMemberCodeNum());
+            memberModelService.deleteMemberModel(memberModel.getMemberCodeNum());
         }catch (Exception e){
             e.printStackTrace();
         }

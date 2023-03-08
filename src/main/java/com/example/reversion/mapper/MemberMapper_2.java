@@ -18,7 +18,7 @@ public interface MemberMapper_2 {
 
     void updateMemberModel(MemberModel memberModel);
 
-    int deleteMemberModel(String memberID);
+    Integer deleteMemberModel(Integer memberCodeNum);
 
     MemberModel CheckMemberModel(String memberID);
 }
