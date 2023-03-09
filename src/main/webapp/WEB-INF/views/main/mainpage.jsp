@@ -54,6 +54,7 @@
             background-color: #46A094;
             border: 0.5px solid black;
         }
+
         #outMemberCodeNum, #outMemberID, #outMemberName, #outMemberPhone, #outMemberGender, #outMemberBirth{
             font-size: 18px;
             color: #333333;
@@ -69,7 +70,8 @@
 
 <div id="contents" align="center">
 
-    <div id="tableDiv">
+    <div id="
+    tableDiv">
         <table id="listTable" width="70%">
             <thead>
 <%--                <tr>--%>
@@ -136,16 +138,16 @@
                     <td class="update_input">생일은 수정할 수 없습니다.</td>
                 </tr>
                 </thead>
-                <tbody>
+<%--                <tbody>--%>
 
-                </tbody>
+<%--                </tbody>--%>
             </table>
         </form>
 
 
         <button type="button" id="toUpdateMemberBtn">수정</button>
         <button type="button" id="submitUpdate">수정</button>
-        <button type="button" id="toMainBtn">수정하지 않고 목록으로</button>
+<%--        <button type="button" id="toMainBtn">수정하지 않고 목록으로</button>--%>
         <button type="button" id="DeleteMemberBtn">선택한 사용자 삭제</button>
         <button type="button" id="closeDetailDiv">창 닫기</button><br><br>
         <br><br>
@@ -177,9 +179,6 @@
     <button type="button" id="goAddMamber">
         addMember
     </button>
-    <button type="button" id="toTopButn">
-        To page top
-    </button>
 </div>
 
 
@@ -191,10 +190,12 @@
         Mainlist();
         $("#form-div").hide();
         $("#detailDiv").hide();
-        // $("#updateMember").hide();
     });
 
     function Mainlist(){
+
+        $("#tbody").empty();
+        initMember();
 
         $.ajax({
             url:"./main/list",
@@ -249,6 +250,27 @@
     }
 
 
+
+
+    //delete와 update를 사용하기 위해서는 같은 변수가 여러번 사용된다. 먼저 전역변수로 선언해주고, 재할당해서 사용하기로 했다.
+    //재할당하는 거니까, 검사 철저하게 해주기.
+    var memberCodeNum = null;
+    var memberID = null;
+    var memberName = null;
+    var memberPhone = null;
+    var memberGender = null;
+    var memberBirth = null;
+
+    function initMember(){
+        memberCodeNum = null;
+        memberID = null;
+        memberName = null;
+        memberPhone = null;
+        memberGender = null;
+        memberBirth = null;
+    }
+
+
     //제대로 기능중임.
     $(document).on("mouseenter", ".target", function(){
             $(this).addClass("select");
@@ -260,74 +282,76 @@
 
     $(document).on("click", ".select", function(){
 
-        const data01 = $(this).children().eq(0).text(); //memberCodeNum
+
+        memberCodeNum = $(this).children().eq(0).text(); //memberCodeNum
         // alert(data01);
-        const data02 = $(this).children().eq(1).text(); //memberID
-        const data03 = $(this).children().eq(2).text(); //memberName
-        const data04 = $(this).children().eq(3).text(); //memberPhone
-        const data05 = $(this).children().eq(4).text(); //memberGender
-        const data06 = $(this).children().eq(5).text(); //memberBirth
+        memberID = $(this).children().eq(1).text(); //memberID
+        memberName = $(this).children().eq(2).text(); //memberName
+        memberPhone = $(this).children().eq(3).text(); //memberPhone
+        memberGender = $(this).children().eq(4).text(); //memberGender
+        memberBirth = $(this).children().eq(5).text(); //memberBirth
 
-        getDetail(data01, data02, data03, data04, data05, data06);
+        getDetail(memberCodeNum, memberID, memberName, memberPhone, memberGender, memberBirth);
 
+        $("#goAddMamber").hide();
         $("#detailDiv").show();
 
 
         //detail에서 타고 넘어가야 하는 수정 관련 클래스와 버튼들.
         $("#submitUpdate").hide();
-        $("#toMainBtn").hide();
+        // $("#toMainBtn").hide();
         $(".update").hide();
         $(".update_input").hide();
-
-
-        //선택된 값을 가지고 update를 하는 것.
-        $("#toUpdateMemberBtn").click(function(){
-
-            $(".update").show();    //update용 td 출력
-            $(".update_input").show(); //update input 태그가 담기거나, 안내사항 출력
-            $("#toMainBtn").show(); //수정하지 않고 목록으로 버튼 보여주기, 그냥 디테일만 조회할 때는 수정에 관한 로직이 끼어들면 안되니까 이렇게 처리
-
-            const data01 =$("#outMemberCodeNum").text();
-            const data02 = $("#outMemberID").text();
-            const data03 = $("#outMemberName").text();
-            const data04 = $("#outMemberPhone").text();
-
-            //같은 updateMember 버튼을 쓰고 있었다. 같은 버튼에서 기능을 가르는 방법으로 만든 분기문.
-            if( $("#mode").val() === null ){
-                $("$mode").val(" A ");
-            }else{
-
-                    //스크롤 이동시키기. 이미 데이터가 넘어왔어야 여기로 이동한다.
-                    let locationUpdate = document.querySelector("#toMainBtn").offsetTop;
-                    window.scrollTo({
-                        top:locationUpdate, behavior:"smooth"
-                    })
-
-                    //수정하기 버튼 보여주고
-                    $("#submitUpdate").show();
-                    $("#toUpdateMemberBtn").hide();
-
-                    //수정 버튼을 눌렀을 때 수정 진행
-                    $("#submitUpdate").click(function(){
-                        //updateMember 처리를 여기서 함.
-                        updateMember(data01, data02, data03, data04);
-                    })
-            }
-        });
-
-
-        $("#DeleteMemberBtn").click(function(){
-            //어차피 confirm을 받으니, 여기서 데이터를 넘겨줘도 괜찮지 않을까?
-            deleteMemberConfirm(data01,data03);
-            deleteMember(data01); //data01 =  const data01 = $(this).children().eq(0).text(); //memberCodeNum
-            // 1. 이름을 지정해서 confrim에 이름 + "을 삭제하시겠습니까?" 물어볼 수 있어야 함, DeleteMemberConfirm에 넘어가는 값은 const data03 = $(this).children().eq(2).text(); //memberName 값, 선택된 trd의 이름이다.
-            // 2. yes 눌렸을 때, 실제적인 ajax call이 들어가야 함. -->deleteMember
-        })
     });
 
+    //선택된 값을 가지고 update를 하는 것.
+    $("#toUpdateMemberBtn").click(function(){
+
+        $(".update").show();    //update용 td 출력
+        $(".update_input").show(); //update input 태그가 담기거나, 안내사항 출력
+        // $("#toMainBtn").show(); //수정하지 않고 목록으로 버튼 보여주기, 그냥 디테일만 조회할 때는 수정에 관한 로직이 끼어들면 안되니까 이렇게 처리
+
+        memberCodeNum =$("#outMemberCodeNum").text();
+        memberID = $("#outMemberID").text();
+        memberName = $("#outMemberName").text();
+        memberPhone = $("#outMemberPhone").text();
+
+        //같은 updateMember 버튼을 쓰고 있었다. 같은 버튼에서 기능을 가르는 방법으로 만든 분기문.
+        if( $("#mode").val() === null ){
+            $("$mode").val(" A ");
+        }else{
+
+            //수정하기 버튼 보여주고
+            $("#submitUpdate").show();
+            $("#toUpdateMemberBtn").hide();
+
+            //수정 버튼을 눌렀을 때 수정 진행
+            $("#submitUpdate").click(function(){
+                //updateMember 처리를 여기서 함.
+                updateMember(memberCodeNum, memberID, memberName, memberPhone);
+            })
+        }
+    });
+
+
+    $("#DeleteMemberBtn").click(function(){
+        memberCodeNum = $("#outMemberCodeNum").text();
+        memberName = $("#outMemberName").text();
+        //어차피 confirm을 받으니, 여기서 데이터를 넘겨줘도 괜찮지 않을까?
+        deleteMemberConfirm();
+        deleteMember(); //data01 =  const data01 = $(this).children().eq(0).text(); //memberCodeNum
+        // 1. 이름을 지정해서 confrim에 이름 + "을 삭제하시겠습니까?" 물어볼 수 있어야 함, DeleteMemberConfirm에 넘어가는 값은 const data03 = $(this).children().eq(2).text(); //memberName 값, 선택된 trd의 이름이다.
+        // 2. yes 눌렸을 때, 실제적인 ajax call이 들어가야 함. -->deleteMember
+    });
+
+
     $("#closeDetailDiv").click(function(){
+
+        $("#toUpdateMemberBtn").show();
+        $("#goAddMamber").show();
         $("#detailDiv").hide();
-    })
+
+    });
 
     $("#goAddMamber").click(function(){
         $("#form-div").show();
@@ -335,15 +359,7 @@
     });
 
     //클릭한 멤버 값 받아서 detail 창에 띄워주는 기능. ajax call X
-    function getDetail(data01, data02, data03, data04, data05, data06){
-
-        let memberCodeNum = data01;
-        let memberID = data02;
-        let memberName = data03;
-        let memberPhone = data04;
-        let memberGender = data05;
-        let memberBirth = data06;
-
+    function getDetail(memberCodeNum, memberID, memberName, memberPhone, memberGender, memberBirth){
 
         $(".outMemberCodeNum").text(memberCodeNum);
         $(".outMemberID").text(memberID);
@@ -357,21 +373,21 @@
 
 
     //getDetail 후, 수정 눌렀을 때 ajax 콜, 컨트롤러 처리를 위한 함수.
-    function updateMember(data01, data02, data03, data04){
+    function updateMember(memberCodeNum, memberID, memberName, memberPhone){
 
         $(".update").show();    //update용 td 출력
         $(".update_input").show(); //update input 태그가 담기거나, 안내사항 출력
-        $("#toMainBtn").show(); //수정하지 않고 목록으로 버튼 보여주기, 그냥 디테일만 조회할 때는 수정에 관한 로직이 끼어들면 안되니까 이렇게 처리
+        // $("#toMainBtn").show(); //수정하지 않고 목록으로 버튼 보여주기, 그냥 디테일만 조회할 때는 수정에 관한 로직이 끼어들면 안되니까 이렇게 처리
 
 
         console.log("updateMember------------------------------------------>"+data01);
-        data01 = $(".outMemberCodeNum").text();
+        memberCodeNum = $(".outMemberCodeNum").text();
 
-        let outMemberCodeNum = data01;
+        let outMemberCodeNum = memberCodeNum;
 
-        let preID = data02; //바꿀 거랑 비교해줘야 하니까 여기 따로 변수 선언함. 얘들도 null로 들어왔을 가능성 농후함.
-        let preName = data03;
-        let prephone = data04;
+        let preID = memberID; //바꿀 거랑 비교해줘야 하니까 여기 따로 변수 선언함. 얘들도 null로 들어왔을 가능성 농후함.
+        let preName = memberName;
+        let prephone = memberPhone;
 
         //update할 때, memberCodeNum을 PK로 잡고 들어가서 수정하는데, 그게 안 넘어가서 SQL 에러가 나는 것 같음
         // alert(outMemberCodeNum);
@@ -401,26 +417,25 @@
                 success :function(data, response){
 
                     $("#detailDiv").hide();
-                    $("#tbody").empty();
                     $("mode").val(null);
                     Mainlist();
+                    initMember();
                 }
             })
     }
 
-    $("#toMainBtn").click(function(){
-        //시작 버튼으로 눌렀으니까, 멤버 호출하는 건 그만해주기.
 
+    function initUpdate(){
         //입력되어있던 input값 지워주기.
-        $("#updateID").val("");
-        $("#updateName").val("");
-        $("#updatePhone").val("");
-        $("#mode").val("");
+
+        $("#updateID").val(null);
+        $("#updateName").val(null);
+        $("#updatePhone").val(null);
+        $("#mode").val(null);
 
         $("#detailDiv").hide();
         $("#goAddMamber").show();
-
-    })
+    }
 
     $("#resetBtn").click(function(){
 
@@ -435,13 +450,20 @@
 
         $("#form-div").hide();
 
-        let memberID = $("#memberID").val();
-        let memberName = $("#memberName").val();
-        let memberPhone = $("#memberPhone").val();
-        let memberGender = $("#memberGender").val();
-        let memberBirth = $("#memberBirth").val();
+        memberID = $("#memberID").val();
+        memberName = $("#memberName").val();
+        memberPhone = $("#memberPhone").val();
+        memberGender = $("#memberGender").val();
+        memberBirth = $("#memberBirth").val();
 
         console.log(memberID, memberName, memberPhone, memberGender, memberBirth);
+
+
+
+
+
+
+
 
         let data = {
             "memberID" : memberID,
@@ -463,7 +485,7 @@
             dataType:"json",
             contentType:"application/json",
             // async : false,
-            success :function(data, response){
+            success :function(data){
 
                 console.log(data);
                 initAddForm();
@@ -491,23 +513,17 @@
         $("#goAddMamber").show();
     }
 
-    //맨 처음으로 이동하는 함수.
-    $("#toTopButn").click(function(){
-        window.scrollTo(0,0);
-        $("html, body").animate({
-            scrollTop:0,
-            behavior:"smooth"
-        }, 500);
-    });
 
+    function deleteMemberConfirm(){
 
-    function deleteMemberConfirm(data01, data03){
+        memberPhone = $("#outMemberCodeNum").val();
+        memberName = $("#outMemberName").val();
 
-        var DeleteConfirm = confirm(data03+" 사용자를 삭제하시겠습니까?");
+        var DeleteConfirm = confirm(memberName+" 사용자를 삭제하시겠습니까?");
 
         if(DeleteConfirm==true){
-            alert("확인을 눌렀습니다.\n"+data03+"사용자 삭제 진행");
-            deleteMember(data01);
+            alert(memberName+"사용자 삭제 진행");
+            removeEventListener("click", deleteMemberConfirm);
         }else{
             alert("취소.");
         }
@@ -519,6 +535,7 @@
         let data = {
             "memberCodeNum" : data01,
         }
+
         $.ajax({
 
             url:"/main/delete",
@@ -528,10 +545,10 @@
             dataType:"json",
             contentType:"application/json",
 
-            success :function(data, response){
-                $("#form-div").hide();
-
-                $("#tbody").empty();
+            success :function(data){
+                $("#detailDiv").hide();
+                data = null;
+                initMember();
                 Mainlist();
 
             },error:function(data, error){
