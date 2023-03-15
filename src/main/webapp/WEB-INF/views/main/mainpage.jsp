@@ -135,19 +135,19 @@
                 <thead>
                 <tr>
                     <td>memberCode는 수정할 수 없습니다.</td>
-                    <td class="outMemberCodeNum"> </td>
+                    <td class="outMemberCodeNum2"> </td>
                 </tr>
                 <tr>
                     <td>수정할 ID 입력</td>
-                    <td class="update_input"><input type="text" id="updateID" width="100%" height="100%"></td>
+                    <td class="update_input"><input type="text" id="updateID" size="100%"></td>
                 </tr>
                 <tr>
                     <td>수정할 이름 입력</td>
-                    <td class="update_input"><input type="text" id="updateName" width="100%" height="100%"></td>
+                    <td class="update_input"><input type="text" size="100%" id="updateName"></td>
                 </tr>
                 <tr>
                     <td>수정할 전화번호 입력</td>
-                    <td class="update_input"><input type="text" id="updatePhone" width="100%" height="100%"></td>
+                    <td class="update_input"><input type="text" id="updatePhone" size="100%"></td>
                 </tr>
                 <tr>
                     <td>성별은 수정할 수 없습니다.</td>
@@ -207,8 +207,9 @@
         Mainlist();
         $("#form-div").hide();
         $("#detailDiv").hide();
-        $("#updateForm").hide();
+        // $("#updateForm").hiㅋde();
     });
+
 
     function Mainlist(){
 
@@ -319,7 +320,6 @@
         $("#submitUpdate").hide();
         // $("#toMainBtn").hide();
         $(".update").hide();
-        $(".update_input").hide();
     });
 
 
@@ -375,6 +375,7 @@
         $("#toUpdateMemberBtn").show();
         $("#goAddMamber").show();
         $("#detailDiv").hide();
+        initUpdate();
 
     });
 
@@ -402,18 +403,8 @@
     //getDetail 후, 수정 눌렀을 때 ajax 콜, 컨트롤러 처리를 위한 함수.
     function updateMember(memberCodeNum, memberID, memberName, memberPhone){
 
-        initMember();
-
-        memberCodeNum =$("#outMemberCodeNum").text();
-        // $(".update").show();    //update용 td 출력
-        $(".update_input").show(); //update input 태그가 담기거나, 안내사항 출력
-        // $("#toMainBtn").show(); //수정하지 않고 목록으로 버튼 보여주기, 그냥 디테일만 조회할 때는 수정에 관한 로직이 끼어들면 안되니까 이렇게 처리
-
-
         console.log("updateMember------------------------------------------>"+memberCodeNum);
 
-
-        let outMemberCodeNum = $(".outMemberCodeNum").text();
         memberName =  $(".outMemberName").text();
 
         let preID = memberID; //바꿀 거랑 비교해줘야 하니까 여기 따로 변수 선언함. 얘들도 null로 들어왔을 가능성 농후함.
@@ -434,7 +425,6 @@
             "memberName" : (updateName!=null) ? updateName : preName,
             "memberPhone" : (updatePhone!=null) ? updatePhone
                             :(updatePhone.length()!=11) ? updatePhone : alert("11자리 전화번호 입력하세요. ")
-
         }
 
             $.ajax({
@@ -451,6 +441,7 @@
                     $(".mode").val(null);
                     Mainlist();
                     initMember();
+                    initUpdate();
                 }
             })
     }
@@ -556,7 +547,7 @@
     }
 
     function deleteMember(memberCodeNum){
-        alert("전달받은 입력값 확인 -->" +memberCodeNum);
+        // alert("전달받은 입력값 확인 -->" +memberCodeNum);
 
         let data = {
             "memberCodeNum" : memberCodeNum,
@@ -576,6 +567,8 @@
                 data = null;
                 initMember();
                 Mainlist();
+                initUpdate();
+                $("#goAddMamber").show();
 
             },error:function(data, error){
 
@@ -588,3 +581,7 @@
 
 </script>
 </html>
+
+
+
+
