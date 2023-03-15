@@ -306,17 +306,21 @@
 
         console.log("클릭한 멤버 이름 : "+memberName+", 클릭한 멤버 ID : "+memberID);
 
+        $("#detailDiv").show();
+        initDetailAndUpdate();
+
         getDetail(memberCodeNum, memberID, memberName, memberPhone, memberGender, memberBirth);
 
         $("#goAddMamber").hide();
         $("#toUpdateMemberBtn").show();
-        initDetailAndUpdate();
         $("#submitUpdate").hide();
     });
 
     function initDetailAndUpdate(){
         $("#updateForm").hide();
+        $("#detailForm").show();
         $("#detailDiv").show();
+
     }
 
 
@@ -519,8 +523,8 @@
 
                 console.log("saveMember 클릭됨. 다음 Member 추가함. --------------->"+data);
                 initAddForm();
-                $("#form-div").hide();
                 initDetailAndUpdate();
+                $("#form-div").hide();
                 Mainlist();
             },
             error:function(error){
