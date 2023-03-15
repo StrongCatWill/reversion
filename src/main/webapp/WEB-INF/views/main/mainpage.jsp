@@ -102,25 +102,25 @@
             <table id="detailTable" width="70%" border="1">
                 <thead>
                 <tr>
-                    <td>사용자의 memberCodeNum : </td>
+                    <td id="guideMemberCodeNum">사용자의 memberCodeNum : </td>
                     <td class="outMemberCodeNum"> </td>
                     <td class="update">수정할 정보 입력</td>
                     <td class="update_input">memberCode는 수정할 수 없습니다.</td>
                 </tr>
                 <tr>
-                    <td>사용자의 ID : </td>
+                    <td id="guideMemberID">사용자의 ID : </td>
                     <td class="outMemberID"> </td>
                     <td class="update">수정할 ID 입력</td>
                     <td class="update_input"><input type="text" id="updateID" width="100%" height="100%"></td>
                 </tr>
                 <tr>
-                    <td>사용자의 이름 : </td>
+                    <td id="guideMemberName">사용자의 이름 : </td>
                     <td class="outMemberName"></td>
                     <td class="update">수정할 이름 입력</td>
                     <td class="update_input"><input type="text" id="updateName" width="100%" height="100%"></td>
                 </tr>
                 <tr>
-                    <td>사용자의 전화번호 : </td>
+                    <td id="guideMemberPhone">사용자의 전화번호 : </td>
                     <td class="outMemberPhone"> </td>
                     <td class="update">수정할 전화번호 입력</td>
                     <td class="update_input"><input type="text" id="updatePhone" width="100%" height="100%"></td>
@@ -295,6 +295,7 @@
 
         $("#goAddMamber").hide();
         $("#detailDiv").show();
+        $("#toUpdateMemberBtn").show();
 
 
         //detail에서 타고 넘어가야 하는 수정 관련 클래스와 버튼들.
@@ -329,6 +330,10 @@
             $("#submitUpdate").click(function(){
                 //updateMember 처리를 여기서 함.
                 updateMember(memberCodeNum, memberID, memberName, memberPhone);
+                if($(".select").click){
+                    $("#submitUpdate").hide();
+                    $("#toUpdateMemberBtn").show();
+                }
             })
         }
     });
