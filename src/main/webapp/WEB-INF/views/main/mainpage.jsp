@@ -59,10 +59,6 @@
             font-size: 18px;
             color: #333333;
         }
-        .update{
-            font-weight: bold;
-            font-size: large;
-        }
     </style>
 </head>
 <body>
@@ -94,7 +90,7 @@
     <div id="detailDiv">
         <br><br><br>
         <h5><br>선택한 사용자의 세부 정보입니다. <br> 수정 버튼을 누르면 사용자 정보를 수정합니다. </h5>
-        <hr id="detailHr">
+        <hr>
         <form id="detailForm">
             <input type="hidden" value="" class="mode">
             <table id="detailTable" width="70%" border="1">
@@ -118,12 +114,10 @@
                 <tr>
                     <td id="guideMemberGender">사용자의 성별 : </td>
                     <td class="outMemberGender"></td>
-                    <td class="update"></td>
                 </tr>
                 <tr>
                     <td id="guideMemberBirth">사용자의 생일 : </td>
                     <td class="outMemberBirth"></td>
-                    <td class="update"></td>
                 </tr>
                 </thead>
             </table>
@@ -174,7 +168,7 @@
         <div id="hide-form">
             <br>
             <hr>
-            <h4>새 정보 입력</h4>
+            <h4>새 사용자 정보 입력</h4>
             <h6>각각 폼에 맞는 정보를 입력하세요.</h6>
             memberID : <input type="text" id="memberID"><br>
             memberName : <input type="text" id="memberName"><br>
@@ -207,7 +201,7 @@
         Mainlist();
         $("#form-div").hide();
         $("#detailDiv").hide();
-        // $("#updateForm").hiㅋde();
+        $("#updateForm").hide();
     });
 
 
@@ -310,19 +304,23 @@
         memberGender = $(this).children().eq(4).text(); //memberGender
         memberBirth = $(this).children().eq(5).text(); //memberBirth
 
+        console.log("클릭한 멤버 이름 : "+memberName+", 클릭한 멤버 ID : "+memberID);
+
         getDetail(memberCodeNum, memberID, memberName, memberPhone, memberGender, memberBirth);
 
         $("#goAddMamber").hide();
-        $("#detailDiv").show();
         $("#toUpdateMemberBtn").show();
-
-        //detail에서 타고 넘어가야 하는 수정 관련 클래스와 버튼들.
+        initDetailAndUpdate();
         $("#submitUpdate").hide();
-        // $("#toMainBtn").hide();
-        $(".update").hide();
     });
 
+    function initDetailAndUpdate(){
+        $("#updateForm").hide();
+        $("#detailDiv").show();
+    }
 
+
+    //detailFrom을 닫고 update 폼을 여는 기능임. 선택한 멤버의 정보를 넘겨주는 것이 중요하다.
     $("#toUpdateMemberBtn").click(function(){
 
         // switchUpdateForm();
@@ -330,8 +328,12 @@
         $("#updateForm").show();
 
         initMember();
+        var newCodeNum = $(".outMemberCodeNum").text();
+        console.log(newCodeNum);
 
-        memberCodeNum =$("#outMemberCodeNum").text();
+        $("#outMemberCodeNum2").text(newCodeNum); //아래 수정폼에 보이게 만드는 건데
+
+        memberCodeNum =newCodeNum;
         memberID = $("#outMemberID").text();
         memberName = $("#outMemberName").text();
         memberPhone = $("#outMemberPhone").text();
@@ -340,18 +342,22 @@
         if( $(".mode").val() === null ){
             $(".mode").val(" A ");
         }else{
-
             //수정하기 버튼 보여주고
             $("#submitUpdate").show();
+
             $("#toUpdateMemberBtn").hide();
 
             //수정 버튼을 눌렀을 때 수정 진행
             $("#submitUpdate").click(function(){
                 //updateMember 처리를 여기서 함.
                 updateMember(memberCodeNum, memberID, memberName, memberPhone);
+
                 if($(".select").click){
                     $("#submitUpdate").hide();
                     $("#toUpdateMemberBtn").show();
+
+                    $("#detailDiv").hide();
+                    initDetailAndUpdate();
                 }
             })
         }
@@ -375,6 +381,7 @@
         $("#toUpdateMemberBtn").show();
         $("#goAddMamber").show();
         $("#detailDiv").hide();
+        initDetailAndUpdate();
         initUpdate();
 
     });
@@ -420,7 +427,7 @@
         // //로직 검사에 쓸 데이터
         // alert("업데이트할 데이터가 들어오지 않았음. 데이터를 입력하고 시도하세요.");
         let data = {
-            "memberCodeNum" : outMemberCodeNum,
+            "memberCodeNum" : memberCodeNum,
             "memberID" : (updateID!=null) ? updateID : preID,
             "memberName" : (updateName!=null) ? updateName : preName,
             "memberPhone" : (updatePhone!=null) ? updatePhone
@@ -439,9 +446,16 @@
 
                     $("#detailDiv").hide();
                     $(".mode").val(null);
+
+                    $("#detailTable").show();
+                    $("#updateForm").hide();
+
+                    $("#tbody").empty();
                     Mainlist();
+
                     initMember();
                     initUpdate();
+                    initDetailAndUpdate();
                 }
             })
     }
@@ -464,6 +478,7 @@
         initAddForm();
 
         console.log("resetBtn 클릭됨. 저장하지 않고 addMember 폼 닫힘. ");
+
     })
 
 
@@ -502,9 +517,10 @@
             // async : false,
             success :function(data){
 
-                console.log(data);
+                console.log("saveMember 클릭됨. 다음 Member 추가함. --------------->"+data);
                 initAddForm();
                 $("#form-div").hide();
+                initDetailAndUpdate();
                 Mainlist();
             },
             error:function(error){
@@ -568,6 +584,7 @@
                 initMember();
                 Mainlist();
                 initUpdate();
+                initDetailAndUpdate();
                 $("#goAddMamber").show();
 
             },error:function(data, error){
