@@ -81,6 +81,23 @@
             </thead>
             <tbody id="tbody" class="test">
             </tbody>
+
+<%--            tfoot은 페이징 처리에 관한 기능 들어감.--%>
+            <tfoot>
+<%--                페이징 몇 개씩 몰아서 볼 건지 선택하는 창--%>
+                <select id="dataPerPage">
+                    <option value="5">5개씩 보기</option>
+                    <option value="10">10개씩 보기</option>
+                    <option value="15">15개씩 보기</option>
+                </select>
+<%--                페이징 몇 개 들어있는지 표시하는 HTML--%>
+                <ul id="pagingul">
+
+                </ul>
+<%--                데이터 표시할 테이블(일단 있어서 넣기는 했는데, 이게 뭔지는 튜토리얼 다 따라가봐야 알 것 같음.--%>
+                <span id="displayCount">
+                </span>
+            </tfoot>
         </table>
     </div>
     <div>
@@ -262,9 +279,7 @@
         });
     }
 
-
-
-
+    //------------------------전역변수 구역-----------------
     //delete와 update를 사용하기 위해서는 같은 변수가 여러번 사용된다. 먼저 전역변수로 선언해주고, 재할당해서 사용하기로 했다.
     //재할당하는 거니까, 검사 철저하게 해주기.
     var memberCodeNum = null;
@@ -274,14 +289,6 @@
     var memberGender = null;
     var memberBirth = null;
 
-    function initMember(){
-        memberCodeNum = null;
-        memberID = null;
-        memberName = null;
-        memberPhone = null;
-        memberGender = null;
-        memberBirth = null;
-    }
 
     $(document).on("mouseenter", ".target", function(){
             $(this).addClass("select");
@@ -294,6 +301,8 @@
     //선택된 값을 가지고 update를 하는 것.
 
     $(document).on("click", ".select", function(){
+
+        $("#resetBtn").trigger("click");
 
 
         memberCodeNum = $(this).children().eq(0).text(); //memberCodeNum
@@ -315,14 +324,6 @@
         $("#toUpdateMemberBtn").show();
         $("#submitUpdate").hide();
     });
-
-    function initDetailAndUpdate(){
-        $("#updateForm").hide();
-        $("#detailForm").show();
-        $("#detailDiv").show();
-
-    }
-
 
     //detailFrom을 닫고 update 폼을 여는 기능임. 선택한 멤버의 정보를 넘겨주는 것이 중요하다.
     $("#toUpdateMemberBtn").click(function(){
@@ -391,8 +392,10 @@
     });
 
     $("#goAddMamber").click(function(){
+
         $("#form-div").show();
         $("#goAddMamber").hide();
+
     });
 
     //클릭한 멤버 값 받아서 detail 창에 띄워주는 기능. ajax call X
@@ -465,18 +468,6 @@
     }
 
 
-    function initUpdate(){
-        //입력되어있던 input값 지워주기.
-
-        $("#updateID").val(null);
-        $("#updateName").val(null);
-        $("#updatePhone").val(null);
-        $(".mode").val(null);
-
-        $("#detailDiv").hide();
-        $("#goAddMamber").show();
-    }
-
     $("#resetBtn").click(function(){
 
         initAddForm();
@@ -484,7 +475,6 @@
         console.log("resetBtn 클릭됨. 저장하지 않고 addMember 폼 닫힘. ");
 
     })
-
 
     //create member용
     $("#saveMember").click(function(){
@@ -523,9 +513,9 @@
 
                 console.log("saveMember 클릭됨. 다음 Member 추가함. --------------->"+data);
                 initAddForm();
-                initDetailAndUpdate();
                 $("#form-div").hide();
                 Mainlist();
+                $("#detailForm").hide();
             },
             error:function(error){
                 alert('에러 발생 :: '+error);
@@ -535,19 +525,6 @@
             }
         });
     });
-
-    //add 창에서 저장하거나, 저장하지 않을 때 폼의 input 태그 내 입력값을 지우고 form div를 지우는 함수
-    function initAddForm(){
-        $("#memberID").val(null);
-        $("#memberName").val(null);
-        $("#memberPhone").val(null);
-        $("#memberGender").val(null);
-        $("#memberBirth").val(null);
-
-        $("#form-div").hide();
-        $("#goAddMamber").show();
-    }
-
 
     function deleteMemberConfirm(){
 
@@ -599,6 +576,55 @@
             }
         })
     }
+
+    //-------------------------init 구역-----------------------------------------------------
+    //add 창에서 저장하거나, 저장하지 않을 때 폼의 input 태그 내 입력값을 지우고 form div를 지우는 함수
+    function initAddForm(){
+        $("#memberID").val(null);
+        $("#memberName").val(null);
+        $("#memberPhone").val(null);
+        $("#memberGender").val(null);
+        $("#memberBirth").val(null);
+
+        $("#form-div").hide();
+        $("#goAddMamber").show();
+    }
+
+    function initUpdate(){
+        //입력되어있던 input값 지워주기.
+
+        $("#updateID").val(null);
+        $("#updateName").val(null);
+        $("#updatePhone").val(null);
+        $(".mode").val(null);
+
+        $("#detailDiv").hide();
+        $("#goAddMamber").show();
+    }
+
+    function initDetailAndUpdate(){
+        $("#updateForm").hide();
+        $("#detailForm").show();
+        $("#detailDiv").show();
+
+    }
+
+    function initMember(){
+        memberCodeNum = null;
+        memberID = null;
+        memberName = null;
+        memberPhone = null;
+        memberGender = null;
+        memberBirth = null;
+    }
+
+    // -----------------------------------------paging 구역-------------------------------------------------------------
+    let totalData;                  //총 데이터 수
+    let dataPerPage;                //한 페이지에 나타낼 멤버 row 수
+    let pageCount = 5;              //페이징에 나타낼 페이지 수
+    let globalCurrentPage =1;       //현재 페이지
+    let datalist;                   //표시하려는 데이터 리스트
+
 
 </script>
 </html>
