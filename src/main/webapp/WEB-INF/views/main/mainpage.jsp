@@ -381,9 +381,10 @@
 
 
         console.log("updateMember------------------------------------------>"+data01);
-        memberCodeNum = $(".outMemberCodeNum").text();
 
-        let outMemberCodeNum = memberCodeNum;
+
+        let outMemberCodeNum = $(".outMemberCodeNum").text();
+        memberName =  $(".outMemberName").text();
 
         let preID = memberID; //바꿀 거랑 비교해줘야 하니까 여기 따로 변수 선언함. 얘들도 null로 들어왔을 가능성 농후함.
         let preName = memberName;
@@ -516,24 +517,26 @@
 
     function deleteMemberConfirm(){
 
-        memberPhone = $("#outMemberCodeNum").val();
-        memberName = $("#outMemberName").val();
+
+        memberCodeNum = $(".outMemberCodeNum").text();
+        memberName = $(".outMemberName").text();
 
         var DeleteConfirm = confirm(memberName+" 사용자를 삭제하시겠습니까?");
 
         if(DeleteConfirm==true){
             alert(memberName+"사용자 삭제 진행");
-            removeEventListener("click", deleteMemberConfirm);
+            deleteMember(memberCodeNum);
+            removeEventListener("click", DeleteConfirm);
         }else{
             alert("취소.");
         }
     }
 
-    function deleteMember(data01){
-        // alert("전달받은 입력값 확인 -->" +data01);
+    function deleteMember(memberCodeNum){
+        alert("전달받은 입력값 확인 -->" +memberCodeNum);
 
         let data = {
-            "memberCodeNum" : data01,
+            "memberCodeNum" : memberCodeNum,
         }
 
         $.ajax({
