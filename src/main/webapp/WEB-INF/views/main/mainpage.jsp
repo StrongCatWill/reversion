@@ -528,7 +528,6 @@
 
     function deleteMemberConfirm(){
 
-
         memberCodeNum = $(".outMemberCodeNum").text();
         memberName = $(".outMemberName").text();
 
@@ -624,6 +623,8 @@
     let pageCount = 5;              //페이징에 나타낼 페이지 수
     let globalCurrentPage =1;       //현재 페이지
     let datalist;                   //표시하려는 데이터 리스트
+
+
 
 
 </script>
