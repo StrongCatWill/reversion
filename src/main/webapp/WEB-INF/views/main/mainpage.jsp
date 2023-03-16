@@ -267,7 +267,7 @@
     });
 
 
-    function Mainlist(num){
+    function Mainlist(globalCurrentPage){
 
         $("#tbody").empty();
         initMember();
@@ -670,10 +670,9 @@
     let totalData;                  //총 데이터 수, Mainlist에서 구해져서 떨어짐.(totalData.length로 써야 함.)
     let dataPerPage = $("select[name=dataPerPage]").val();      //한 페이지에 나타낼 멤버 row 수, 기본값으로 설정함.
     let pageCount;                  //페이징에 나타낼 페이지 수
-    let globalCurrentPage =1;       //현재 페이지
-    // let datalist;                   //표시하려는 데이터 리스트
 
-    let pagingCount = 0;            //반복문 돌려줄 친구.
+    let globalCurrentPage =1;       //현재 페이지
+
 
     //한 페이지당 몇 row까지 표시할 건지 select 태그에서 변경되는 값을 잡는 getPageIndexNum
     $("select[name=dataPerPage]").change(function getPageIndexNum(){
