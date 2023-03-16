@@ -136,4 +136,14 @@ public class MainController {
         }
         return ResponseEntity.ok(memberModel);
     }
+
+    @GetMapping("/main/listPagingTest")
+    public ResponseEntity<List<MemberModel>> mainListPagingTest(){
+
+        System.out.println("main page List PagingTest 연결 성공");
+
+        List<MemberModel> memberList = memberModelService.getSelectedMemberModelList();
+
+        return new ResponseEntity<>(memberList, HttpStatus.OK);
+    }
 }

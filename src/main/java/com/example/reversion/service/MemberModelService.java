@@ -13,9 +13,18 @@ public class MemberModelService {
 
     private final MemberMapper_2 memberMapper2;
 
+    //페이징 처리를 위한 것. 컨트롤러에서 이걸 그대로 전송해주어야 한다.
+    private Integer limit;
+    private Integer offset;
+
     public List<MemberModel> getMemberModelList(){
 
         return memberMapper2.getMemberModelList();
+    }
+
+//    페이징 처리때문에 따로 만들었음. getMemberModelList 자리로 바꿔줄 것.(js단의 Mainlist도 수정해야 함.)
+    public List<MemberModel> getSelectedMemberModelList(){
+        return memberMapper2.getSelectedMemberModelList(limit, offset);
     }
 
     public MemberModel getMemberModel(String memberID){

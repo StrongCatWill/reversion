@@ -12,7 +12,7 @@ public interface MemberMapper_2 {
 
     List<MemberModel> getMemberModelList();
 
-
+    List<MemberModel> getSelectedMemberModelList(Integer limit, Integer offset);
 
     void createMemberModel(MemberModel member);
 
