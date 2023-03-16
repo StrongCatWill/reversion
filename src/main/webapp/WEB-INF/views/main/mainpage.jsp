@@ -11,15 +11,13 @@
         body{
             background-color: #adc0b7;
         }
-        #form-div{
-            align-self: center;
-            background-color: #6BBD99;
-            border: 2px solid #46A094;
-        }
-        #detailDiv{
+        #detailDiv, #form-div{
             align-self: center;
             background-color: #46A094;
             border: 2px solid #46A094;
+        }
+        input{
+            width: 100%;
         }
         Button{
             display: inline-block;
@@ -214,23 +212,38 @@
 
 
     <div id="form-div">
-        <div id="hide-form">
-            <br>
-            <hr>
-            <h4>새 사용자 정보 입력</h4>
-            <h6>각각 폼에 맞는 정보를 입력하세요.</h6>
-            memberID : <input type="text" id="memberID"><br>
-            memberName : <input type="text" id="memberName"><br>
-            memberPhone : <input type="text" id="memberPhone"><br>
-            memberGender : <input type="text" id="memberGender" placeholder="F or M"><br>
-            memberBirth : <input type="text" id="memberBirth" placeholder="YYYY-MM-DD"><br>
-
-            <div id="buttonDiv">
-                <button type="submit" onclick="" value="저장" id="saveMember">저장</button>
-                <button type="reset" id="resetBtn">저장하지 않고 창 닫기</button>
-            </div>
-
+        <h5>새 사용자 정보 입력</h5>
+        <h6>각각 폼에 맞는 정보를 입력하세요.</h6><br>
+        <hr>
+        <table width="70%" border="1">
+            <thead>
+                <tr>
+                    <td>사용자의 ID : </td>
+                    <td><input type="text" id="memberID"></td>
+                </tr>
+                <tr>
+                    <td>사용자의 이름 : </td>
+                    <td><input type="text" id="memberName"></td>
+                </tr>
+                <tr>
+                    <td>사용자의 전화번호 : </td>
+                    <td><input type="text" id="memberPhone"></td>
+                </tr>
+                <tr>
+                    <td>사용자의 성별 : </td>
+                    <td><input type="text" id="memberGender" placeholder="F or M"></td>
+                </tr>
+                <tr>
+                    <td>사용자의 생일 : </td>
+                    <td><input type="text" id="memberBirth" placeholder="YYYY-MM-DD"></td>
+                </tr>
+            </thead>
+        </table>
+        <div id="buttonDiv">
+            <button type="submit" onclick="" value="저장" id="saveMember">저장</button>
+            <button type="reset" id="resetBtn">저장하지 않고 창 닫기</button>
         </div>
+        <br>
     </div>
 
     <hr>
@@ -254,7 +267,7 @@
     });
 
 
-    function Mainlist(){
+    function Mainlist(num){
 
         $("#tbody").empty();
         initMember();
@@ -407,12 +420,13 @@
 
 
     $("#DeleteMemberBtn").click(function(){
+
         initMember();
         memberCodeNum = $("#outMemberCodeNum").text();
         memberName = $("#outMemberName").text();
 
         deleteMemberConfirm();
-        deleteMember(); //data01 =  const data01 = $(this).children().eq(0).text(); //memberCodeNum
+        // deleteMember(); //data01 =  const data01 = $(this).children().eq(0).text(); //memberCodeNum
         // 1. 이름을 지정해서 confrim에 이름 + "을 삭제하시겠습니까?" 물어볼 수 있어야 함, DeleteMemberConfirm에 넘어가는 값은 const data03 = $(this).children().eq(2).text(); //memberName 값, 선택된 trd의 이름이다.
         // 2. yes 눌렸을 때, 실제적인 ajax call이 들어가야 함. -->deleteMember
     });
@@ -550,7 +564,6 @@
 
                 console.log("saveMember 클릭됨. 다음 Member 추가함. --------------->"+data);
                 initAddForm();
-                $("#form-div").hide();
                 Mainlist();
                 $("#detailForm").hide();
             },
@@ -561,6 +574,8 @@
                 initAddForm();
             }
         });
+
+        $("#form-div").hide();
     });
 
     function deleteMemberConfirm(){
@@ -573,10 +588,10 @@
         if(DeleteConfirm==true){
             alert(memberName+"사용자 삭제 진행");
             deleteMember(memberCodeNum);
-            removeEventListener("click", DeleteConfirm);
         }else{
             alert("취소.");
         }
+        $("closeDetailDiv").trigger("click");
     }
 
     function deleteMember(memberCodeNum){
@@ -596,21 +611,19 @@
             contentType:"application/json",
 
             success :function(data){
-                $("#detailDiv").hide();
                 data = null;
                 initMember();
                 Mainlist();
                 initUpdate();
                 initDetailAndUpdate();
                 $("#goAddMamber").show();
-
             },error:function(data, error){
 
                 alert('에러 발생 :: '+error + "넘어온 데이터 확인 " + data.memberID);
                 $("#form-div").hide();
-
             }
         })
+        $("closeDetailDiv").trigger("click");
     }
 
     //-------------------------init 구역-----------------------------------------------------
@@ -641,7 +654,6 @@
     function initDetailAndUpdate(){
         $("#updateForm").hide();
         $("#detailForm").show();
-        $("#detailDiv").show();
 
     }
 
@@ -682,17 +694,17 @@
 
         pageCount = totalData/dataPerPage +1;
 
-        $.ajax({
-            type: "GET",
-            url: "/main/listPagingTest",
-            data :{
-                "limit" : dataPerPage,
-                // "offset" :
-
-
-
-            }
-        })
+        // $.ajax({
+        //     type: "POST",
+        //     url: "/main/listPagingTest",
+        //     data :{
+        //         "limit" : dataPerPage,
+        //         // "offset" :
+        //
+        //
+        //
+        //     }
+        // })
 
         return pageCount;
     }

@@ -13,7 +13,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -34,6 +36,10 @@ public class MainController {
         System.out.println("main page List 연결 성공");
 
         List<MemberModel> memberList = memberModelService.getMemberModelList();
+
+//        Map<String, Object> result = new HashMap<>();
+//        result.put(list)
+//        result.put(page)
 
         return new ResponseEntity<>(memberList, HttpStatus.OK);
     }
