@@ -6,6 +6,7 @@
 <head>
     <title>ajax refactoring</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/3653c6eb7b.js" crossorigin="anonymous"></script>
     <style>
         body{
             background-color: #adc0b7;
@@ -55,9 +56,34 @@
             border: 0.5px solid black;
         }
 
-        #outMemberCodeNum, #outMemberID, #outMemberName, #outMemberPhone, #outMemberGender, #outMemberBirth{
+        .outMemberCodeNum, .outMemberID, .outMemberName, .outMemberPhone, .outMemberGender, .outMemberBirth{
             font-size: 18px;
             color: #333333;
+        }
+
+        div.paging{
+            width: 100%;
+            display: inline-flex;
+            align-items: center;
+            margin-top: 20px;
+            justify-content: center;
+        }
+
+        div.paging>i,
+        div.paging>div.pages{
+            font-size: 20px;
+            margin: 0 10px;
+        }
+
+        div.paging>i,
+        div.paging>div.pages>span{
+            margin: 0 3px;
+            cursor: pointer;
+        }
+
+        span.active{
+            color: #b2876f;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -81,27 +107,33 @@
             </thead>
             <tbody id="tbody" class="test">
             </tbody>
-
-<%--            tfoot은 페이징 처리에 관한 기능 들어감.--%>
-            <tfoot>
-<%--                페이징 몇 개씩 몰아서 볼 건지 선택하는 창--%>
-                <select id="dataPerPage">
-                    <option value="5">5개씩 보기</option>
-                    <option value="10">10개씩 보기</option>
-                    <option value="15">15개씩 보기</option>
-                </select>
-<%--                페이징 몇 개 들어있는지 표시하는 HTML--%>
-                <ul id="pagingul">
-
-                </ul>
-<%--                데이터 표시할 테이블(일단 있어서 넣기는 했는데, 이게 뭔지는 튜토리얼 다 따라가봐야 알 것 같음.--%>
-                <span id="displayCount">
-                </span>
-            </tfoot>
         </table>
+
+        <div class="paging">
+            <br><br>
+            <i class="fa-solid fa-angles-left" id="first_page"></i>
+            <i class="fa-solid fa-chevron-left" id="prev_page"></i>
+
+            <div class="pages">
+                <span class="active">1</span>
+                <span>2</span>
+                <span>3</span>
+                <span>4</span>
+                <span>5</span>
+            </div>
+            <i class="fa-solid fa-angle-right" id="next_page"></i>
+            <i class="fa-solid fa-angles-right" id="last_page"></i>
+
+            <select name="dataPerPage">
+                <option value="5">5개씩 보기</option>
+                <option value="10">10개씩 보기</option>
+                <option value="15">15개씩 보기</option>
+            </select>
+        </div>
+
     </div>
     <div>
-        <br><br><br><br>
+        <br><br>
     </div>
 
     <div id="detailDiv">
@@ -202,15 +234,14 @@
     </div>
 
     <hr>
-    <br><br>
     <button type="button" id="goAddMamber">
         addMember
     </button>
+    <br><br><br>
 </div>
 
 
 <script src="https://code.jquery.com/jquery-3.6.3.js" integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
-</body>
 <script>
 
     $(function() {
@@ -291,7 +322,7 @@
 
 
     $(document).on("mouseenter", ".target", function(){
-            $(this).addClass("select");
+        $(this).addClass("select");
     });
 
     $(document).on("mouseleave", ".select", function(){
@@ -438,33 +469,33 @@
             "memberID" : (updateID!=null) ? updateID : preID,
             "memberName" : (updateName!=null) ? updateName : preName,
             "memberPhone" : (updatePhone!=null) ? updatePhone
-                            :(updatePhone.length()!=11) ? updatePhone : alert("11자리 전화번호 입력하세요. ")
+                :(updatePhone.length()!=11) ? updatePhone : alert("11자리 전화번호 입력하세요. ")
         }
 
-            $.ajax({
-                url:"/main/update",
-                type:"post",
-                data: JSON.stringify(data),
-                dataType:"json",
-                contentType:"application/json",
-                async : false,
+        $.ajax({
+            url:"/main/update",
+            type:"post",
+            data: JSON.stringify(data),
+            dataType:"json",
+            contentType:"application/json",
+            async : false,
 
-                success :function(data, response){
+            success :function(data, response){
 
-                    $("#detailDiv").hide();
-                    $(".mode").val(null);
+                $("#detailDiv").hide();
+                $(".mode").val(null);
 
-                    $("#detailTable").show();
-                    $("#updateForm").hide();
+                $("#detailTable").show();
+                $("#updateForm").hide();
 
-                    $("#tbody").empty();
-                    Mainlist();
+                $("#tbody").empty();
+                Mainlist();
 
-                    initMember();
-                    initUpdate();
-                    initDetailAndUpdate();
-                }
-            })
+                initMember();
+                initUpdate();
+                initDetailAndUpdate();
+            }
+        })
     }
 
 
@@ -494,8 +525,8 @@
             "memberName" : memberName,
             "memberPhone" : memberPhone,
             "memberGender" :    (memberGender== "M") ?  memberGender :
-                                (memberGender == "F" )? memberGender :
-                                alert("Gender must be M or F"),
+                (memberGender == "F" )? memberGender :
+                    alert("Gender must be M or F"),
             "memberBirth" :memberBirth
         }
 
@@ -625,9 +656,18 @@
     let datalist;                   //표시하려는 데이터 리스트
 
 
+    function getPageIndex(totalData, pageSize){
+
+    }
+
+    //몇 개씩 보여줄 건지 띄우기
+    $("select[name=dataPerPage]").change(function getPageIndexNum(){
+        console.log($(this).val());
+    })
 
 
 </script>
+</body>
 </html>
 
 
