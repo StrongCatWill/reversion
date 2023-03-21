@@ -3,14 +3,16 @@
 <mapper namespace="com.example.reversion.mapper.MemberMapper_2">
 
     <select id="getMemberModelList" resultType="com.example.reversion.model.MemberModel">
-        select * from membertable
-    </select>
-
-    <select id="getSelectedMemberModelList" resultType="com.example.reversion.model.MemberModel">
         select  * from membertable
         order by memberCodeNum asc
-        LIMIT #{limit} OFFSET #{offset}
+            LIMIT #{limit} OFFSET #{offset}
     </select>
+
+<!--    <select id="getSelectedMemberModelList" resultType="com.example.reversion.model.MemberModel">-->
+<!--        select  * from membertable-->
+<!--        order by memberCodeNum asc-->
+<!--        LIMIT #{limit} OFFSET #{offset}-->
+<!--    </select>-->
 
     <select id="getMemberModel" resultType="com.example.reversion.model.MemberModel">
         select * from membertable where memberCodeNum = #{memberCodeNum}

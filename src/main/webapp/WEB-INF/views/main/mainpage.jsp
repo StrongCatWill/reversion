@@ -267,22 +267,38 @@
         $("#updateForm").hide();
 
     });
+
     let totalData;                  //총 데이터 수, Mainlist에서 구해져서 떨어짐.(totalData.length로 써야 함.)
     let dataPerPage = $("select[name=dataPerPage]").val();      //한 페이지에 나타낼 멤버 row 수, 기본값으로 설정함.
     let pageCount;                  //페이징에 나타낼 페이지 수
     let globalCurrentPage =1;       //현재 페이지
+    let offset = (globalCurrentPage-1)*dataPerPage;
 
     function Mainlist(dataPerPage, globalCurrentPage){
+
+        //pagination 처리를 위해 추가된 파라미터.
+        console.log("처음 실행시 받아온 dataPerPage :: "+dataPerPage);
+        console.log("처음 실행시 받아온 globalCurrentPage :: "+globalCurrentPage);
 
         $("#tbody").empty();
         initMember();
 
+        let data = {
+            "limit" : dataPerPage,
+            "offset" : (globalCurrentPage-1)*dataPerPage
+        }
+        console.log("처음 실행시 받아온 limit :: "+data.limit);
+        console.log("처음 실행시 받아온 offset :: "+data.offset);
         $.ajax({
             url:"./main/list",
             type:"get",
             dataType:"json",
+            data : {
+                "limit" : dataPerPage,
+                "offset" : (globalCurrentPage-1)*dataPerPage
+            },
 
-            success:function(result){
+            success:function(result, response){
 
                 console.log(result)     //뱉는 memberlist의 정보, 길이값. object의 형태로 들어온다.
 
@@ -329,8 +345,9 @@
                     totalData = result;
                     pageCount = totalData.length/dataPerPage;
 
-                    return totalData;
+                    return [totalData, pageCount];
                 }); //each문 끝
+
 
                 console.log("each 문 밖에서 타는 나머지값 : "+ totalData.length%dataPerPage);
                 console.log("each 문 밖에서 타는 pageCount : "+ pageCount);
@@ -348,12 +365,11 @@
                         $("#pages").append($pagesNum);
                     }
                     }else{
-                        for(PagingIndex; PagingIndex<pageCount;PagingIndex++){
+                        for(PagingIndex; PagingIndex<pageCount+1;PagingIndex++){
                             let $pagesNum = $("<span> "+PagingIndex+" </span>");
                             $("#pages").append($pagesNum);
                         }
                     }
-
                 }
             });
         }
@@ -707,12 +723,26 @@
 
     // -----------------------------------------paging 구역-------------------------------------------------------------
     {
+        //동적으로 생성된 #pages Div 안의 <span>에 이벤트 걸기. -----------> globalCurrentPage 변경됨.
+        $("#pages").on("click", "span", function (){
+           globalCurrentPage = $(this).text().trim();
+           console.log("클릭한 페이지 인덱스 값 :: " + globalCurrentPage);
+
+           return globalCurrentPage;
+        });
+
         //한 페이지당 몇 row까지 표시할 건지 select 태그에서 변경되는 값을 잡는 getPageIndexNum
         $("select[name=dataPerPage]").change(function getPageIndexNum(){
             console.log("선택한 한 페이지당 보여줄 row 의 개수는 : "+$(this).val());
             dataPerPage = $(this).val();
-            $("#tbody").empty();
-            Mainlist();
+            offset = (globalCurrentPage-1)*dataPerPage;
+            console.log("클릭한 페이지 인덱스 값 :: " + globalCurrentPage);
+            console.log("변경되는 offset 값((globalCurrentPage-1)*dataPerPage) :: " + offset);
+
+            // $("#tbody").empty();
+            // Mainlist();
+
+
 
             return dataPerPage;
         })
@@ -725,6 +755,7 @@
         function getPageIndex(){
             console.log("Mainlist에서 뱉은 totalData : "+totalData.length); //length 잘 넘어왔는지 확인
             console.log("선택한 한 페이지당 보여줄 row 의 개수는 : "+dataPerPage);
+            console.log("offset 값((globalCurrentPage-1)*dataPerPage) :: " + offset);
 
             pageCount = totalData/dataPerPage +1;
 
@@ -732,19 +763,6 @@
                 "limit" : dataPerPage,
                 "offset" : (globalCurrentPage-1) * dataPerPage
             }
-
-            $.ajax({
-                type: "POST",
-                url: "/main/listPagingTest",
-                data: JSON.stringify(pagingData),
-                dataType:"json",
-                contentType:"application/json",
-
-                success(pagingData){
-
-                }
-
-            })
 
             return pageCount;
         }

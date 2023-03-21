@@ -28,25 +28,16 @@ public class MainController {
     }
 
     @GetMapping("/main/list")
-    public ResponseEntity<List<MemberModel>> mainList(){
+    public ResponseEntity<List<MemberModel>> mainList(@RequestParam("limit") Integer limit, @RequestParam("offset") Integer offset){
 
-        System.out.println("main page List 연결 성공");
+        System.out.println("main (pagination) List 연결 성공");
 
-        List<MemberModel> memberList = memberModelService.getMemberModelList();
-
+        List<MemberModel> memberList = memberModelService.getMemberModelList(limit, offset);
 
         return new ResponseEntity<>(memberList, HttpStatus.OK);
     }
 
-//    @GetMapping("/main/listPagingTest")
-//    public ResponseEntity<List<MemberModel>> mainListPagingTest(@RequestParam Integer limit, @RequestParam Integer offset){
-//
-//        System.out.println("main page List PagingTest 연결 성공");
-//
-//        List<MemberModel> memberList = memberModelService .getSelectedMemberModelList(limit, offset);
-//
-//        return new ResponseEntity<>(memberList, HttpStatus.OK);
-//    }
+
 
 
     @GetMapping("/main/add")

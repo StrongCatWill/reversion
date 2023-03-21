@@ -10,7 +10,7 @@ public interface MemberMapper_2 {
 
     MemberModel getMemberModel(String memberID);
 
-    List<MemberModel> getMemberModelList();
+    List<MemberModel> getMemberModelList(Integer limit, Integer offset);
 
     List<MemberModel> getSelectedMemberModelList(Integer limit, Integer offset);
 
