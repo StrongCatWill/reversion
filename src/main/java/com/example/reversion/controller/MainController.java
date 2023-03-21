@@ -11,9 +11,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -37,12 +34,19 @@ public class MainController {
 
         List<MemberModel> memberList = memberModelService.getMemberModelList();
 
-//        Map<String, Object> result = new HashMap<>();
-//        result.put(list)
-//        result.put(page)
 
         return new ResponseEntity<>(memberList, HttpStatus.OK);
     }
+
+//    @GetMapping("/main/listPagingTest")
+//    public ResponseEntity<List<MemberModel>> mainListPagingTest(@RequestParam Integer limit, @RequestParam Integer offset){
+//
+//        System.out.println("main page List PagingTest 연결 성공");
+//
+//        List<MemberModel> memberList = memberModelService .getSelectedMemberModelList(limit, offset);
+//
+//        return new ResponseEntity<>(memberList, HttpStatus.OK);
+//    }
 
 
     @GetMapping("/main/add")
@@ -143,13 +147,5 @@ public class MainController {
         return ResponseEntity.ok(memberModel);
     }
 
-    @GetMapping("/main/listPagingTest")
-    public ResponseEntity<List<MemberModel>> mainListPagingTest(){
 
-        System.out.println("main page List PagingTest 연결 성공");
-
-        List<MemberModel> memberList = memberModelService.getSelectedMemberModelList();
-
-        return new ResponseEntity<>(memberList, HttpStatus.OK);
-    }
 }
