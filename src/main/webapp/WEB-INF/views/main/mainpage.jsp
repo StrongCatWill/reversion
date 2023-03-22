@@ -118,7 +118,7 @@
             <i class="fa-solid fa-chevron-left" id="prev_page"></i>
 
             <div id="pages">
-                <span class="active">1</span>
+
             </div>
             <i class="fa-solid fa-angle-right" id="next_page"></i>
             <i class="fa-solid fa-angles-right" id="last_page"></i>
@@ -251,7 +251,6 @@
     <button type="button" id="goAddMamber">
         addMember
     </button>
-    <button id="PagingTest">eat me!</button>
     <br><br><br>
 </div>
 
@@ -261,17 +260,31 @@
 
     $(function() {
         initMember();
+        $("#tbody").empty();
         MainList(dataPerPage, globalCurrentPage);
         $("#form-div").hide();
         $("#detailDiv").hide();
         $("#updateForm").hide();
     });
 
+    //------------------------전역변수 구역-----------------
+    //delete와 update를 사용하기 위해서는 같은 변수가 여러번 사용된다. 먼저 전역변수로 선언해주고, 재할당해서 사용하기로 했다.
+    //재할당하는 거니까, 검사 철저하게 해주기.
+    let memberCodeNum = null;
+    let memberID = null;
+    let memberName = null;
+    let memberPhone = null;
+    let memberGender = null;
+    let memberBirth = null;
+
     let totalData;                  //총 데이터 수, Mainlist에서 구해져서 떨어짐.(totalData.length로 써야 함.)
     let dataPerPage = $("select[name=dataPerPage]").val();      //한 페이지에 나타낼 멤버 row 수, 기본값으로 설정함.
     let pageCount;                  //페이징에 나타낼 페이지 수
     let globalCurrentPage =1;       //현재 페이지
-    let offset;
+
+    let offset=0;
+    let limit = dataPerPage;
+
 
 
     function MainList(dataPerPage, globalCurrentPage){
@@ -280,17 +293,15 @@
         console.log("처음 실행시 받아온 dataPerPage :: "+dataPerPage);
         console.log("처음 실행시 받아온 globalCurrentPage :: "+globalCurrentPage);
 
+
         $("#tbody").empty();
         initMember();
 
-        let data = {
-            "limit" : dataPerPage,
-            "offset" : (globalCurrentPage-1)*dataPerPage
-        }
+        limit = dataPerPage;
+        offset = (globalCurrentPage-1)*dataPerPage;
 
-        console.log("처음 실행시 받아온 limit :: "+data.limit);
-        console.log("처음 실행시 받아온 offset :: "+data.offset);
-
+        console.log("limit :: "+limit);
+        console.log("offset :: "+offset);
 
         //전체 데이터를 불러오려고 만든 ajax get call
         $.ajax({
@@ -301,7 +312,8 @@
             //전체 데이터 불러오는 ajax call
             success:function(result){
 
-                console.log("전체 데이터 불러온 것 :: "+result)     //뱉는 memberlist의 정보, 길이값. object의 형태로 들어온다.
+                console.log("전체 데이터 불러온 것 :: "+result);     //뱉는 memberlist의 정보, 길이값. object의 형태로 들어온다.
+
 
                 //페이징 처리를 위한 전체 데이터 값 반환
                 totalData = result;
@@ -313,7 +325,7 @@
 
                 let PagingIndex = globalCurrentPage +1;
 
-                if((totalData.length%dataPerPage)===0){
+                if((totalData.length%dataPerPage)==0){
 
                     console.log("if 문 안에서 타는 나머지값 : "+ totalData.length%dataPerPage);
                     console.log("if 문 안에서 타는 pageCount : "+ pageCount);
@@ -321,12 +333,12 @@
 
 
                     for(PagingIndex; PagingIndex<pageCount; PagingIndex++){
-                        let $pagesNum = $("<span> "+PagingIndex+" </span>");
+                        let $pagesNum = $("<span> "+(PagingIndex-1)+" </span>");
                         $("#pages").append($pagesNum);
                     }
                 }else{
-                    for(PagingIndex; PagingIndex<pageCount+1;PagingIndex++){
-                        let $pagesNum = $("<span> "+PagingIndex+" </span>");
+                    for(PagingIndex; PagingIndex<pageCount+2;PagingIndex++){
+                        let $pagesNum = $("<span> "+(PagingIndex-1)+" </span>");
                         $("#pages").append($pagesNum);
                     }   //for문 end
                 }   //else문 end
@@ -398,15 +410,7 @@
     }   //mainlist function end
 
 
-    //------------------------전역변수 구역-----------------
-    //delete와 update를 사용하기 위해서는 같은 변수가 여러번 사용된다. 먼저 전역변수로 선언해주고, 재할당해서 사용하기로 했다.
-    //재할당하는 거니까, 검사 철저하게 해주기.
-    var memberCodeNum = null;
-    var memberID = null;
-    var memberName = null;
-    var memberPhone = null;
-    var memberGender = null;
-    var memberBirth = null;
+
 
 
     // crud 영역
@@ -584,7 +588,7 @@
                     $("#updateForm").hide();
 
                     $("#tbody").empty();
-                    MainList();
+                    MainList(dataPerPage, globalCurrentPage);
 
                     initMember();
                     initUpdate();
@@ -636,9 +640,10 @@
                 contentType:"application/json",
                 success :function(data){
 
-                    console.log("saveMember 클릭됨. 다음 Member 추가함. --------------->"+data);
                     initAddForm();
-                    MainList();
+
+                    MainList(dataPerPage, globalCurrentPage);
+
                     $("#detailForm").hide();
                 },
                 error:function(error){
@@ -687,7 +692,9 @@
                 success :function(data){
                     data = null;
                     initMember();
-                    MainList();
+
+                    MainList(dataPerPage, globalCurrentPage);
+
                     initUpdate();
                     initDetailAndUpdate();
                     $("#goAddMamber").show();
@@ -748,48 +755,32 @@
     {
         //동적으로 생성된 #pages Div 안의 <span>에 이벤트 걸기. -----------> globalCurrentPage 변경됨.
         $("#pages").on("click", "span", function (){
-           globalCurrentPage = $(this).text().trim();
-           console.log("클릭한 페이지 인덱스 값 :: " + globalCurrentPage);
 
-           return globalCurrentPage;
+            globalCurrentPage = $(this).text().trim();
+           // console.log("클릭한 페이지 인덱스 값 :: " + globalCurrentPage);
+
+            $("#pages span").removeClass("active");
+            $(this).addClass("active");
+
+            MainList(dataPerPage, globalCurrentPage);
+
+            return globalCurrentPage;
+
         });
 
         //한 페이지당 몇 row까지 표시할 건지 select 태그에서 변경되는 값을 잡는 getPageIndexNum
         $("select[name=dataPerPage]").change(function getPageIndexNum(){
-            console.log("선택한 한 페이지당 보여줄 row 의 개수는 : "+$(this).val());
+
             dataPerPage = $(this).val();
-            offset = (globalCurrentPage-1)*dataPerPage;
-            console.log("클릭한 페이지 인덱스 값 :: " + globalCurrentPage);
-            console.log("변경되는 offset 값((globalCurrentPage-1)*dataPerPage) :: " + offset);
+            globalCurrentPage = 1;
 
-            // $("#tbody").empty();
-            // Mainlist();
-
-
+            $("#pages").empty();
+            MainList(dataPerPage, globalCurrentPage);
 
             return dataPerPage;
         })
-
-        //테스트용 버튼.
-        $("#PagingTest").click(function(){
-            getPageIndex();
-        })
-
-        function getPageIndex(){
-            console.log("Mainlist에서 뱉은 totalData : "+totalData.length); //length 잘 넘어왔는지 확인
-            console.log("선택한 한 페이지당 보여줄 row 의 개수는 : "+dataPerPage);
-            console.log("offset 값((globalCurrentPage-1)*dataPerPage) :: " + offset);
-
-            pageCount = totalData/dataPerPage +1;
-
-            let  pagingData = {
-                "limit" : dataPerPage,
-                "offset" : (globalCurrentPage-1) * dataPerPage
-            }
-
-            return pageCount;
-        }
     }
+
 </script>
 </body>
 </html>
