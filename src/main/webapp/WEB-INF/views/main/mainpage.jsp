@@ -286,12 +286,21 @@
     let limit = dataPerPage;
 
 
+    let lastIndex= null;
+    let $lastIndexSpan = null;
+    let $firstIndexSpan = null;
+    let $prevIndexSpan = null;
+    let prevIndex = null;
+    let nextIndex = null;
+    let $nextIndexSpan = null;
+
+
 
     function MainList(dataPerPage, globalCurrentPage){
 
         //pagination 처리를 위해 추가된 파라미터.
-        console.log("처음 실행시 받아온 dataPerPage :: "+dataPerPage);
-        console.log("처음 실행시 받아온 globalCurrentPage :: "+globalCurrentPage);
+        // console.log("처음 실행시 받아온 dataPerPage :: "+dataPerPage);
+        // console.log("처음 실행시 받아온 globalCurrentPage :: "+globalCurrentPage);
 
 
         $("#tbody").empty();
@@ -300,8 +309,8 @@
         limit = dataPerPage;
         offset = (globalCurrentPage-1)*dataPerPage;
 
-        console.log("limit :: "+limit);
-        console.log("offset :: "+offset);
+        // console.log("limit :: "+limit);
+        // console.log("offset :: "+offset);
 
         //전체 데이터를 불러오려고 만든 ajax get call
         $.ajax({
@@ -312,7 +321,7 @@
             //전체 데이터 불러오는 ajax call
             success:function(result){
 
-                console.log("전체 데이터 불러온 것 :: "+result);     //뱉는 memberlist의 정보, 길이값. object의 형태로 들어온다.
+                // console.log("전체 데이터 불러온 것 :: "+result);     //뱉는 memberlist의 정보, 길이값. object의 형태로 들어온다.
 
 
                 //페이징 처리를 위한 전체 데이터 값 반환
@@ -320,16 +329,16 @@
                 pageCount = totalData.length/dataPerPage;
 
 
-                console.log("each 문 밖에서 타는 나머지값 : "+ totalData.length%dataPerPage);
-                console.log("each 문 밖에서 타는 pageCount : "+ pageCount);
+                // console.log("each 문 밖에서 타는 나머지값 : "+ totalData.length%dataPerPage);
+                // console.log("each 문 밖에서 타는 pageCount : "+ pageCount);
 
                 let PagingIndex = globalCurrentPage +1;
 
                 if((totalData.length%dataPerPage)==0){
 
-                    console.log("if 문 안에서 타는 나머지값 : "+ totalData.length%dataPerPage);
-                    console.log("if 문 안에서 타는 pageCount : "+ pageCount);
-                    console.log("if 문 안에서 타는 globalCurrentPage : "+ globalCurrentPage);
+                    // console.log("if 문 안에서 타는 나머지값 : "+ totalData.length%dataPerPage);
+                    // console.log("if 문 안에서 타는 pageCount : "+ pageCount);
+                    // console.log("if 문 안에서 타는 globalCurrentPage : "+ globalCurrentPage);
 
 
                     for(PagingIndex; PagingIndex<pageCount; PagingIndex++){
@@ -363,7 +372,7 @@
 
             success:function(success){
 
-                console.log("1페이지에 출력하는 Array :: "+success)     //뱉는 memberlist의 정보, 길이값. object의 형태로 들어온다.
+                // console.log("1페이지에 출력하는 Array :: "+success)     //뱉는 memberlist의 정보, 길이값. object의 형태로 들어온다.
 
                 $.each(success, function(index, item){
 
@@ -463,7 +472,7 @@
 
             initMember();
             var newCodeNum = $(".outMemberCodeNum").text();
-            console.log(newCodeNum);
+            // console.log(newCodeNum);
 
             $("#outMemberCodeNum2").text(newCodeNum); //아래 수정폼에 보이게 만드는 건데
 
@@ -547,7 +556,7 @@
         //getDetail 후, 수정 눌렀을 때 ajax 콜, 컨트롤러 처리를 위한 함수.
         function updateMember(memberCodeNum, memberID, memberName, memberPhone){
 
-            console.log("updateMember------------------------------------------>"+memberCodeNum);
+            // console.log("updateMember------------------------------------------>"+memberCodeNum);
 
             memberName =  $(".outMemberName").text();
 
@@ -629,7 +638,7 @@
                 "memberBirth" :memberBirth
             }
 
-            console.log(data);
+            // console.log(data);
 
             $.ajax({
                 url:"/main/add",
@@ -778,7 +787,93 @@
             MainList(dataPerPage, globalCurrentPage);
 
             return dataPerPage;
-        })
+        });
+
+        // 버튼 클릭으로 페이지 이동 구역
+        {
+            //첫번째 페이지로 이동
+            $("#first_page").click(function (){
+                $("#pages").empty();
+                MainList(dataPerPage, 1);
+
+                //css로 active class 넣고 싶은데 첫번째 인덱스는 그게 안 된다.
+                // console.log("---------------------"+$("#pages").children().eq(3).text().trim());
+                // $firstIndexSpan = $("#pages").children().eq(1);
+                // $firstIndexSpan.addClass("active");
+
+                globalCurrentPage = 1;
+                return globalCurrentPage;
+            });
+
+
+            //마지막 페이지로 이동
+            $("#last_page").click(function(){
+
+                lastIndex = $("#pages").children().last().text().trim();
+                $lastIndexSpan = $("#pages").children().last();
+
+                MainList(dataPerPage, lastIndex);
+
+                $("#pages span").removeClass("active");
+                $lastIndexSpan.addClass("active");
+
+                lastIndex = globalCurrentPage;
+                return globalCurrentPage;
+            });
+
+            //이전 페이지 이동
+            $("#prev_page").click(function(){
+                if (globalCurrentPage ===1){
+
+                }else{
+
+                    prevIndex = globalCurrentPage -1;
+                    console.log("이동하기 전 페이지 :: "+globalCurrentPage+"이동한 페이지 :: "+prevIndex);
+
+                    $("#pages").empty();    //지우면 클릭할 때마다 중복으로 pages 생성됨.
+                    MainList(dataPerPage, prevIndex);
+                    $prevIndexSpan = $("#pages").children().eq(prevIndex);
+
+                    // 여기도 스타일 변경해주고 싶은데 안 들어감.
+                    // console.log("이전 페이지로 이동할 때 css 주려는 대상 ----------->"+$prevIndexSpan);
+                    // $("#pages span").removeClass("active");
+                    // $prevIndexSpan.addClass("active");
+
+                    globalCurrentPage = prevIndex;
+                }
+
+                return globalCurrentPage;
+            });
+
+
+
+            //다음 페이지 이동
+            $("#next_page").click(function(){
+
+                lastIndex = $("#pages").children().last().text().trim();
+
+                if(globalCurrentPage === lastIndex){
+
+                }else{
+
+                    nextIndex = globalCurrentPage+1;
+                    console.log("이동하기 전 페이지 :: "+globalCurrentPage+"이동한 페이지 :: "+nextIndex);
+
+                    $("#pages").empty();    //지우면 클릭할 때마다 중복으로 pages 생성됨.
+
+                    MainList(dataPerPage, nextIndex);
+                    nextIndex = globalCurrentPage;
+
+                    // 여기도 스타일 변경해주고 싶은데 안 들어감.
+                    $nextIndexSpan = $("#pages").children().eq(nextIndex);
+                    $("#pages span").removeClass("active");
+                    $nextIndexSpan.addClass("active");
+
+
+                }
+                return globalCurrentPage;
+            });
+        }// 버튼 클릭으로 페이지 이동 구역 끝
     }
 
 </script>
