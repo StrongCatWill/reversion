@@ -272,7 +272,7 @@
     let dataPerPage = $("select[name=dataPerPage]").val();      //한 페이지에 나타낼 멤버 row 수, 기본값으로 설정함.
     let pageCount;                  //페이징에 나타낼 페이지 수
     let globalCurrentPage =1;       //현재 페이지
-    let offset = (globalCurrentPage-1)*dataPerPage;
+    let offset;
 
     function Mainlist(dataPerPage, globalCurrentPage){
 

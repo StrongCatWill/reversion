@@ -19,13 +19,9 @@ public class MemberModelService {
 
     public List<MemberModel> getMemberModelList(Integer limit, Integer offset){
 
-        return memberMapper2.getMemberModelList(this.limit, this.offset);
+        return memberMapper2.getMemberModelList(limit, offset);
     }
 
-//    페이징 처리때문에 따로 만들었음. getMemberModelList 자리로 바꿔줄 것.(js단의 Mainlist도 수정해야 함.)
-//    public List<MemberModel> getSelectedMemberModelList(){
-//        return memberMapper2.getSelectedMemberModelList(limit, offset);
-//    }
 
     public MemberModel getMemberModel(String memberID){
         return memberMapper2.getMemberModel(memberID);
