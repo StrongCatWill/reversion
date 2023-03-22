@@ -261,11 +261,10 @@
 
     $(function() {
         initMember();
-        Mainlist(dataPerPage, globalCurrentPage);
+        MainList(dataPerPage, globalCurrentPage);
         $("#form-div").hide();
         $("#detailDiv").hide();
         $("#updateForm").hide();
-
     });
 
     let totalData;                  //총 데이터 수, Mainlist에서 구해져서 떨어짐.(totalData.length로 써야 함.)
@@ -274,7 +273,8 @@
     let globalCurrentPage =1;       //현재 페이지
     let offset;
 
-    function Mainlist(dataPerPage, globalCurrentPage){
+
+    function MainList(dataPerPage, globalCurrentPage){
 
         //pagination 처리를 위해 추가된 파라미터.
         console.log("처음 실행시 받아온 dataPerPage :: "+dataPerPage);
@@ -287,9 +287,60 @@
             "limit" : dataPerPage,
             "offset" : (globalCurrentPage-1)*dataPerPage
         }
+
         console.log("처음 실행시 받아온 limit :: "+data.limit);
         console.log("처음 실행시 받아온 offset :: "+data.offset);
+
+
+        //전체 데이터를 불러오려고 만든 ajax get call
         $.ajax({
+
+            url:"./main/whole",
+            type:"get",
+            dataType:"json",
+            //전체 데이터 불러오는 ajax call
+            success:function(result){
+
+                console.log("전체 데이터 불러온 것 :: "+result)     //뱉는 memberlist의 정보, 길이값. object의 형태로 들어온다.
+
+                //페이징 처리를 위한 전체 데이터 값 반환
+                totalData = result;
+                pageCount = totalData.length/dataPerPage;
+
+
+                console.log("each 문 밖에서 타는 나머지값 : "+ totalData.length%dataPerPage);
+                console.log("each 문 밖에서 타는 pageCount : "+ pageCount);
+
+                let PagingIndex = globalCurrentPage +1;
+
+                if((totalData.length%dataPerPage)===0){
+
+                    console.log("if 문 안에서 타는 나머지값 : "+ totalData.length%dataPerPage);
+                    console.log("if 문 안에서 타는 pageCount : "+ pageCount);
+                    console.log("if 문 안에서 타는 globalCurrentPage : "+ globalCurrentPage);
+
+
+                    for(PagingIndex; PagingIndex<pageCount; PagingIndex++){
+                        let $pagesNum = $("<span> "+PagingIndex+" </span>");
+                        $("#pages").append($pagesNum);
+                    }
+                }else{
+                    for(PagingIndex; PagingIndex<pageCount+1;PagingIndex++){
+                        let $pagesNum = $("<span> "+PagingIndex+" </span>");
+                        $("#pages").append($pagesNum);
+                    }   //for문 end
+                }   //else문 end
+
+                return [totalData, pageCount];
+
+                },  //whole url success end
+            error:function(error){
+                alert("failed whole url loading");
+            }
+        }); //whole url ajax call end
+
+        $.ajax({
+
             url:"./main/list",
             type:"get",
             dataType:"json",
@@ -298,11 +349,11 @@
                 "offset" : (globalCurrentPage-1)*dataPerPage
             },
 
-            success:function(result, response){
+            success:function(success){
 
-                console.log(result)     //뱉는 memberlist의 정보, 길이값. object의 형태로 들어온다.
+                console.log("1페이지에 출력하는 Array :: "+success)     //뱉는 memberlist의 정보, 길이값. object의 형태로 들어온다.
 
-                $.each(result, function(index, item){
+                $.each(success, function(index, item){
 
                     let tr = $('<tr/>', {
                         class : 'target',
@@ -341,38 +392,10 @@
 
                     $('#tbody').append(tr);
 
-                    //페이징 처리를 위한 전체 데이터 값 반환
-                    totalData = result;
-                    pageCount = totalData.length/dataPerPage;
-
-                    return [totalData, pageCount];
                 }); //each문 끝
-
-
-                console.log("each 문 밖에서 타는 나머지값 : "+ totalData.length%dataPerPage);
-                console.log("each 문 밖에서 타는 pageCount : "+ pageCount);
-                let PagingIndex = globalCurrentPage +1;
-
-                if((totalData.length%dataPerPage)===0){
-
-                    console.log("if 문 안에서 타는 나머지값 : "+ totalData.length%dataPerPage);
-                    console.log("if 문 안에서 타는 pageCount : "+ pageCount);
-                    console.log("if 문 안에서 타는 globalCurrentPage : "+ globalCurrentPage);
-
-
-                    for(PagingIndex; PagingIndex<pageCount; PagingIndex++){
-                        let $pagesNum = $("<span> "+PagingIndex+" </span>");
-                        $("#pages").append($pagesNum);
-                    }
-                    }else{
-                        for(PagingIndex; PagingIndex<pageCount+1;PagingIndex++){
-                            let $pagesNum = $("<span> "+PagingIndex+" </span>");
-                            $("#pages").append($pagesNum);
-                        }
-                    }
-                }
-            });
-        }
+            }   //pagination success end
+        })  //main url ajax call end
+    }   //mainlist function end
 
 
     //------------------------전역변수 구역-----------------
@@ -561,7 +584,7 @@
                     $("#updateForm").hide();
 
                     $("#tbody").empty();
-                    Mainlist();
+                    MainList();
 
                     initMember();
                     initUpdate();
@@ -615,7 +638,7 @@
 
                     console.log("saveMember 클릭됨. 다음 Member 추가함. --------------->"+data);
                     initAddForm();
-                    Mainlist();
+                    MainList();
                     $("#detailForm").hide();
                 },
                 error:function(error){
@@ -664,7 +687,7 @@
                 success :function(data){
                     data = null;
                     initMember();
-                    Mainlist();
+                    MainList();
                     initUpdate();
                     initDetailAndUpdate();
                     $("#goAddMamber").show();
@@ -767,11 +790,6 @@
             return pageCount;
         }
     }
-
 </script>
 </body>
 </html>
-
-
-
-

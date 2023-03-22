@@ -1,6 +1,5 @@
 package com.example.reversion.controller;
 
-
 import com.example.reversion.model.MemberModel;
 import com.example.reversion.service.MemberModelService;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -27,6 +25,17 @@ public class MainController {
         return mav;
     }
 
+    @GetMapping("/main/whole")
+    public ResponseEntity<List<MemberModel>> mainWholeList(){
+
+        System.out.println("main page(whole) List 연결 성공");
+
+        List<MemberModel> memberWholeList = memberModelService.getMemberModeWholelList();
+
+        return new ResponseEntity<>(memberWholeList, HttpStatus.OK);
+    }
+
+
     @GetMapping("/main/list")
     public ResponseEntity<List<MemberModel>> mainList(@RequestParam("limit") Integer limit, @RequestParam("offset") Integer offset){
 
@@ -36,8 +45,6 @@ public class MainController {
 
         return new ResponseEntity<>(memberList, HttpStatus.OK);
     }
-
-
 
 
     @GetMapping("/main/add")

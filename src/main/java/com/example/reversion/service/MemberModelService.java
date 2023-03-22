@@ -22,6 +22,11 @@ public class MemberModelService {
         return memberMapper2.getMemberModelList(limit, offset);
     }
 
+    public List<MemberModel> getMemberModeWholelList(){
+
+        return memberMapper2.getMemberModeWholelList();
+    }
+
 
     public MemberModel getMemberModel(String memberID){
         return memberMapper2.getMemberModel(memberID);

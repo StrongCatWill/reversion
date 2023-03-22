@@ -12,7 +12,7 @@ public interface MemberMapper_2 {
 
     List<MemberModel> getMemberModelList(Integer limit, Integer offset);
 
-    List<MemberModel> getSelectedMemberModelList(Integer limit, Integer offset);
+    List<MemberModel> getMemberModeWholelList();
 
     void createMemberModel(MemberModel member);
 
@@ -20,5 +20,7 @@ public interface MemberMapper_2 {
 
     Integer deleteMemberModel(Integer memberCodeNum);
 
-    MemberModel CheckMemberModel(String memberID);
+//    MemberModel CheckMemberModel(String memberID);
+
+    ;
 }

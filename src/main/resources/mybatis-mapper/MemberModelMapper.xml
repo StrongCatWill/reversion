@@ -8,6 +8,10 @@
             LIMIT #{limit} OFFSET #{offset}
     </select>
 
+    <select id="getMemberModeWholelList" resultType="com.example.reversion.model.MemberModel">
+        select * from membertable
+    </select>
+
 
     <select id="getMemberModel" resultType="com.example.reversion.model.MemberModel">
         select * from membertable where memberCodeNum = #{memberCodeNum}
