@@ -762,19 +762,65 @@
 
     // -----------------------------------------paging 구역-------------------------------------------------------------
     {
-        //동적으로 생성된 #pages Div 안의 <span>에 이벤트 걸기. -----------> globalCurrentPage 변경됨.
-        $("#pages").on("click", "span", function (){
 
+        function movePage(globalCurrentPage){
+            $("#pages span").remove("active");
+            $("#pages").empty();
+            $(this).addClass("active");
+
+            MainList(dataPerPage, globalCurrentPage);
+        }
+
+        //동적으로 생성된 #pages Div 안의 <span>에 이벤트 걸기. -----------> globalCurrentPage 변경됨. 이걸 trigger 할 수만 있으면 좋은데,, this를 어떻게 지정하지?
+        $("#pages").on("click", "span", function(e){
+
+            // e.globalCurrentPage = $(this).text().trim();
             globalCurrentPage = $(this).text().trim();
-           // console.log("클릭한 페이지 인덱스 값 :: " + globalCurrentPage);
 
             $("#pages span").removeClass("active");
             $(this).addClass("active");
 
             MainList(dataPerPage, globalCurrentPage);
 
-            return globalCurrentPage;
 
+            //이전, 처음 페이지 이동시키려고 만든 구역. $("#pages").on("click", "span", function (){}안에 있어서 $("#pages").on("click", "span", function ()이 실행되어야 아래 애들도 기능한다.
+            lastIndex = $("#pages").children().last().text().trim();
+            return globalCurrentPage;
+        });
+
+        //이전 페이지로 이동
+        $("#prev_page").click(function(){
+
+            globalCurrentPage--;
+
+            if(globalCurrentPage<1){
+                alert("Can't move previous page. This is the start of pages");
+                // $("#pages span").removeClass("active");
+                // $("#pages span").children().first().addClass("active");
+                globalCurrentPage = 1;
+            }else{
+                $("#pages").empty();
+                MainList(dataPerPage, globalCurrentPage);
+                $(this).addClass("active");
+            }
+
+            return globalCurrentPage;
+        });
+
+        //다음 페이지로 이동
+        $("#next_page").click(function(){
+
+            globalCurrentPage++;
+
+            if(globalCurrentPage >= lastIndex){
+                globalCurrentPage = lastIndex;
+                alert("Can't move next page. This is the end of pages");
+
+            }else{
+                $("#pages").empty();
+                MainList(dataPerPage, globalCurrentPage);
+            }
+            return globalCurrentPage;
         });
 
         //한 페이지당 몇 row까지 표시할 건지 select 태그에서 변경되는 값을 잡는 getPageIndexNum
@@ -801,16 +847,19 @@
                 // $firstIndexSpan = $("#pages").children().eq(1);
                 // $firstIndexSpan.addClass("active");
 
+                // $("#pages span").removeClass("active");
+                // $("#pages span").children().first().addClass("active");
+
                 globalCurrentPage = 1;
                 return globalCurrentPage;
             });
 
 
             //마지막 페이지로 이동
-            $("#last_page").click(function(){
+            $("#last_page").click(function toFirstPage(){
 
                 lastIndex = $("#pages").children().last().text().trim();
-                $lastIndexSpan = $("#pages").children().last();
+                // $lastIndexSpan = $("#pages").children().last();
 
                 MainList(dataPerPage, lastIndex);
 
@@ -818,59 +867,6 @@
                 $lastIndexSpan.addClass("active");
 
                 lastIndex = globalCurrentPage;
-                return globalCurrentPage;
-            });
-
-            //이전 페이지 이동
-            $("#prev_page").click(function(){
-                if (globalCurrentPage ===1){
-
-                }else{
-
-                    prevIndex = globalCurrentPage -1;
-                    console.log("이동하기 전 페이지 :: "+globalCurrentPage+"이동한 페이지 :: "+prevIndex);
-
-                    $("#pages").empty();    //지우면 클릭할 때마다 중복으로 pages 생성됨.
-                    MainList(dataPerPage, prevIndex);
-                    $prevIndexSpan = $("#pages").children().eq(prevIndex);
-
-                    // 여기도 스타일 변경해주고 싶은데 안 들어감.
-                    // console.log("이전 페이지로 이동할 때 css 주려는 대상 ----------->"+$prevIndexSpan);
-                    // $("#pages span").removeClass("active");
-                    // $prevIndexSpan.addClass("active");
-
-                    globalCurrentPage = prevIndex;
-                }
-
-                return globalCurrentPage;
-            });
-
-
-
-            //다음 페이지 이동
-            $("#next_page").click(function(){
-
-                lastIndex = $("#pages").children().last().text().trim();
-
-                if(globalCurrentPage === lastIndex){
-
-                }else{
-
-                    nextIndex = globalCurrentPage+1;
-                    console.log("이동하기 전 페이지 :: "+globalCurrentPage+"이동한 페이지 :: "+nextIndex);
-
-                    $("#pages").empty();    //지우면 클릭할 때마다 중복으로 pages 생성됨.
-
-                    MainList(dataPerPage, nextIndex);
-                    nextIndex = globalCurrentPage;
-
-                    // 여기도 스타일 변경해주고 싶은데 안 들어감.
-                    $nextIndexSpan = $("#pages").children().eq(nextIndex);
-                    $("#pages span").removeClass("active");
-                    $nextIndexSpan.addClass("active");
-
-
-                }
                 return globalCurrentPage;
             });
         }// 버튼 클릭으로 페이지 이동 구역 끝
