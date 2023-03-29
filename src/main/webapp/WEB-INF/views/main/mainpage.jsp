@@ -351,7 +351,7 @@
 
         $.ajax({
 
-            url:"./main/list",
+            url:"/main/list",
             type:"get",
             dataType:"json",
             data : {
@@ -745,7 +745,7 @@
         //동적으로 생성된 #pages Div 안의 <span>에 이벤트 걸기. -----------> globalCurrentPage 변경됨. 이걸 trigger 할 수만 있으면 좋은데,, this를 어떻게 지정하지?
         $("#pages").on("click", "span", function(){
 
-            globalCurrentPage = $(this).text().trim();
+            globalCurrentPage = $(this).text().trim()*1;
 
             $("#pages span").removeClass("active");
             $(this).addClass("active");
