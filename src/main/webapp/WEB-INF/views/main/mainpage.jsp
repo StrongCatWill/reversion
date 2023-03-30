@@ -629,9 +629,7 @@
                 success :function(data){
 
                     initAddForm();
-
-                    MainList(dataPerPage, globalCurrentPage);
-
+                    $("#last_page").trigger("click");
                     $("#detailForm").hide();
                 },
                 error:function(error){
@@ -741,6 +739,8 @@
         //동적으로 생성된 #pages Div 안의 <span>에 이벤트 걸기. -----------> globalCurrentPage 변경됨. 이걸 trigger 할 수만 있으면 좋은데,, this를 어떻게 지정하지?
         $("#pages").on("click", "span", function(){
 
+            $("#resetBtn").trigger("click");
+
             globalCurrentPage = $(this).text().trim()*1;
 
             MainList(dataPerPage, globalCurrentPage);
@@ -752,6 +752,8 @@
         //한 페이지당 몇 row까지 표시할 건지 select 태그에서 변경되는 값을 잡는 getPageIndexNum
         $("select[name=dataPerPage]").change(function getPageIndexNum(){
 
+            $("#resetBtn").trigger("click");
+
             dataPerPage = $(this).val();
             globalCurrentPage = 1;
 
@@ -762,6 +764,8 @@
         {
             //이전 페이지로 이동
             $("#prev_page").click(function(){
+
+                $("#resetBtn").trigger("click");
 
                 globalCurrentPage--;
 
@@ -776,6 +780,8 @@
             // 다음 페이지로 이동
             $("#next_page").click(function(){
 
+                $("#resetBtn").trigger("click");
+
                 globalCurrentPage++;
                 let lastIndex = $("#pages").children().last().text().trim()*1;
 
@@ -789,16 +795,19 @@
 
             //첫번째 페이지로 이동
             $("#first_page").click(function (){
+                $("#resetBtn").trigger("click");
                 MainList(dataPerPage, 1);
             });
 
 
             //마지막 페이지로 이동
-            $("#last_page").click(function toFirstPage(){
+            $("#last_page").click(function(){
 
+                $("#resetBtn").trigger("click");
                 lastIndex = $("#pages span").last().text().trim()*1;
                 globalCurrentPage = lastIndex;
                 MainList(dataPerPage, globalCurrentPage);
+
             });
         }// 버튼 클릭으로 페이지 이동 구역 끝
     }
