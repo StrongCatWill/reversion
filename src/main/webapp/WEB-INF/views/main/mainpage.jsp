@@ -261,6 +261,7 @@
     $(function() {
         initMember();
         $("#tbody").empty();
+        $("#pages").empty();
         MainList(dataPerPage, globalCurrentPage);
         $("#form-div").hide();
         $("#detailDiv").hide();
@@ -290,8 +291,11 @@
 
     function MainList(dataPerPage, globalCurrentPage){
 
+
         $("#tbody").empty();
         initMember();
+        $("#pages").empty();
+
 
         limit = dataPerPage;
         offset = Math.abs(globalCurrentPage-1)*dataPerPage;
@@ -306,41 +310,36 @@
             //전체 데이터 불러오는 ajax call
             success:function(result){
 
-                console.log("전체 데이터 불러온 것 :: "+result);     //뱉는 memberlist의 정보, 길이값. object의 형태로 들어온다.
+                // console.log("전체 데이터 불러온 것 :: "+result);     //뱉는 memberlist의 정보, 길이값. object의 형태로 들어온다.
                 // console.log("받아온 dataPerPage :: "+dataPerPage);
 
                 //페이징 처리를 위한 전체 데이터 값 반환
-                totalData = result;
-                pageCount = totalData.length/dataPerPage;
-                console.log(totalData);
+                totalData = Math.abs(result.length);
+                pageCount = totalData/dataPerPage;
 
-
-                console.log("each 문 밖에서 타는 나머지값 : "+ totalData.length%dataPerPage);
-                console.log("each 문 밖에서 타는 pageCount : "+ pageCount);
-                console.log("each 문 밖에서 타는 totalData : "+ totalData);
-
-                let PagingIndex = globalCurrentPage +1;
+                //2로 시작해야 append 될 때 1부터 그려짐
+                let PagingIndex = 2;
 
                 //전체 데이터 길이를 한 페이지당 데이터 수로 나눈 값이 0일 때, PagingIndex는 1~몫까지 생성되어야 함.
-                if((totalData.length%dataPerPage)==0){
+                if((pageCount)===0){
 
-                    console.log("if 문 안에서 타는 나머지값 : "+ totalData.length%dataPerPage);
-                    console.log("if 문 안에서 타는 pageCount : "+ pageCount);
-                    console.log("if 문 안에서 타는 globalCurrentPage : "+ globalCurrentPage);
-
-
-                    for(PagingIndex; PagingIndex<pageCount+2; PagingIndex++){
+                    for(PagingIndex; PagingIndex<pageCount+1; PagingIndex++){
                         let $pagesNum = $("<span> "+(PagingIndex-1)+" </span>");
                         $("#pages").append($pagesNum);
                     }
                     //전체 데이터 길이를 한 페이지당 데이터 수로 나눈 값이 0이 아닐 때 PagingIndex는 1~몫+1까지 생성되어야 함.
                 }else{
-                    for(PagingIndex; PagingIndex<pageCount+3;PagingIndex++){
+                    for(PagingIndex; PagingIndex<pageCount+2;PagingIndex++){
                         let $pagesNum = $("<span> "+(PagingIndex-1)+" </span>");
                         $("#pages").append($pagesNum);
                     }   //for문 end
                 }   //else문 end
 
+
+                //현재 페이지에 css가 들어있는 Class 주기
+                $("#pages span").removeClass("active");
+                $TargetIndex = $("#pages span").eq(globalCurrentPage-1);
+                $TargetIndex.addClass("active");
                 return [totalData, pageCount];
 
                 },  //whole url success end
@@ -403,6 +402,8 @@
                     $('#tbody').append(tr);
 
                 }); //each문 끝
+
+
             }   //pagination success end
         })  //main url ajax call end
     }   //mainlist function end
@@ -436,7 +437,7 @@
             memberGender = $(this).children().eq(4).text(); //memberGender
             memberBirth = $(this).children().eq(5).text(); //memberBirth
 
-            console.log("클릭한 멤버 이름 : "+memberName+", 클릭한 멤버 ID : "+memberID);
+            // console.log("클릭한 멤버 이름 : "+memberName+", 클릭한 멤버 ID : "+memberID);
 
             $("#detailDiv").show();
             initDetailAndUpdate();
@@ -547,13 +548,11 @@
             let prephone = memberPhone;
 
             //update할 때, memberCodeNum을 PK로 잡고 들어가서 수정하는데, 그게 안 넘어가서 SQL 에러가 나는 것 같음
-            // alert(outMemberCodeNum);
             let updateID = $("#updateID").val().trim();
             let updateName = $("#updateName").val().trim();
             let updatePhone = $("#updatePhone").val().trim();
 
             // //로직 검사에 쓸 데이터
-            // alert("업데이트할 데이터가 들어오지 않았음. 데이터를 입력하고 시도하세요.");
             let data = {
                 "memberCodeNum" : memberCodeNum,
                 "memberID" : (updateID!=null) ? updateID : preID,
@@ -592,8 +591,7 @@
         $("#resetBtn").click(function(){
 
             initAddForm();
-
-            console.log("resetBtn 클릭됨. 저장하지 않고 addMember 폼 닫힘. ");
+            // console.log("resetBtn 클릭됨. 저장하지 않고 addMember 폼 닫힘. ");
 
         })
 
@@ -608,7 +606,7 @@
             memberGender = $("#memberGender").val();
             memberBirth = $("#memberBirth").val();
 
-            console.log(memberID, memberName, memberPhone, memberGender, memberBirth);
+            // console.log(memberID, memberName, memberPhone, memberGender, memberBirth);
 
             let data = {
                 "memberID" : memberID,
@@ -625,7 +623,6 @@
             $.ajax({
                 url:"/main/add",
                 type:"post",
-                //form 데이터로 받아오면서, bad request를 던져주게 만든 요인이 요있었음.
                 data: JSON.stringify(data),
                 dataType:"json",
                 contentType:"application/json",
@@ -665,7 +662,6 @@
         }
 
         function deleteMember(memberCodeNum){
-            // alert("전달받은 입력값 확인 -->" +memberCodeNum);
 
             let data = {
                 "memberCodeNum" : memberCodeNum,
@@ -747,15 +743,9 @@
 
             globalCurrentPage = $(this).text().trim()*1;
 
-            $("#pages span").removeClass("active");
-            $(this).addClass("active");
-
             MainList(dataPerPage, globalCurrentPage);
 
-
-            //이전, 처음 페이지 이동시키려고 만든 구역. $("#pages").on("click", "span", function (){}안에 있어서 $("#pages").on("click", "span", function ()이 실행되어야 아래 애들도 기능한다.
-            lastIndex = $("#pages").children().last().text().trim();
-            return globalCurrentPage;
+            lastIndex = $("#pages").children().last().text().trim()*1;
 
         });
 
@@ -765,10 +755,7 @@
             dataPerPage = $(this).val();
             globalCurrentPage = 1;
 
-            $("#pages").empty();
             MainList(dataPerPage, globalCurrentPage);
-
-            return dataPerPage;
         });
 
         // 버튼 클릭으로 페이지 이동 구역
@@ -780,66 +767,41 @@
 
                 if(globalCurrentPage<1){
                     alert("Can't move previous page. This is the start of pages");
-                    // $("#pages span").removeClass("active");
-                    // $("#pages span").children().first().addClass("active");
                     globalCurrentPage = 1;
                 }else{
-                    $("#pages").empty();
                     MainList(dataPerPage, globalCurrentPage);
-                    $(this).addClass("active");
                 }
-
-                return globalCurrentPage;
             });
 
             // 다음 페이지로 이동
             $("#next_page").click(function(){
 
                 globalCurrentPage++;
+                let lastIndex = $("#pages").children().last().text().trim()*1;
 
-                if(globalCurrentPage >= lastIndex){
+                if(globalCurrentPage > lastIndex){
                     globalCurrentPage = lastIndex;
                     alert("Can't move next page. This is the end of pages");
-
                 }else{
-                    $("#pages").empty();
                     MainList(dataPerPage, globalCurrentPage);
                 }
-                return globalCurrentPage;
             });
 
             //첫번째 페이지로 이동
             $("#first_page").click(function (){
-                $("#pages").empty();
                 MainList(dataPerPage, 1);
-
-                //css로 active class 넣고 싶은데 첫번째 인덱스는 그게 안 된다.
-                // console.log("---------------------"+$("#pages").children().eq(3).text().trim());
-                // $firstIndexSpan = $("#pages").children().eq(1);
-                // $firstIndexSpan.addClass("active");
-
-                // $("#pages span").removeClass("active");
-                // $("#pages span").children().first().addClass("active");
-
-                globalCurrentPage = 1;
-                return globalCurrentPage;
             });
 
 
             //마지막 페이지로 이동
             $("#last_page").click(function toFirstPage(){
 
-                lastIndex = $("#pages").children().last().text().trim();
-                // $lastIndexSpan = $("#pages").children().last();
-
-                MainList(dataPerPage, lastIndex);
-
-                lastIndex = globalCurrentPage;
-                return globalCurrentPage;
+                lastIndex = $("#pages span").last().text().trim()*1;
+                globalCurrentPage = lastIndex;
+                MainList(dataPerPage, globalCurrentPage);
             });
         }// 버튼 클릭으로 페이지 이동 구역 끝
     }
-
 </script>
 </body>
 </html>
