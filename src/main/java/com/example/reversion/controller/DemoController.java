@@ -24,7 +24,7 @@ public class DemoController {
 
         //---------------메인 루트가 되는 부분---------------------
 
-        ModelAndView mav = new ModelAndView("list");
+        ModelAndView mav = new ModelAndView("test1/list");
 
         extracted(mav);
         return mav;
@@ -42,7 +42,7 @@ public class DemoController {
     /*등록 페이지인 from.jsp 페이지 */
     @GetMapping("/form")
     public ModelAndView formpage(){
-        ModelAndView mav = new ModelAndView("form");
+        ModelAndView mav = new ModelAndView("test1/form");
         return mav;
     }
 
@@ -55,7 +55,7 @@ public class DemoController {
                                    @RequestParam Integer age,
                                    @RequestParam Integer phone){
 
-        ModelAndView mav = new ModelAndView("list");
+        ModelAndView mav = new ModelAndView("test1/list");
 
         try{
             Member member = memberService.createMember(id, name, age, phone);
@@ -80,13 +80,14 @@ public class DemoController {
 
         //맴버에 id, name, age, phone 다 들어 있으므로 따로 정의할 필요 없음.
         model.addAttribute("member", member);
+
         /*model.addAttribute(name);
         model.addAttribute(age);
         model.addAttribute(phone);
 */
         System.out.println("list 페이지에서 선택한 아이디 호출 \n ID : "+id);
 
-        return "/detail";
+        return "test1/detail";
     }
 
 
@@ -94,7 +95,7 @@ public class DemoController {
     public ModelAndView modifier(@RequestParam Integer id,
                                  Model model){
 
-        ModelAndView mav = new ModelAndView("/detail");
+        ModelAndView mav = new ModelAndView("test1/detail");
 
         try{
             Member member = memberService.CheckMember(id);
@@ -134,7 +135,7 @@ public class DemoController {
 
         //맴버에 id, name, age, phone 다 들어 있으므로 따로 정의할 필요 없음.
         model.addAttribute("member", member);
-        return "/modify";
+        return "test1/modify";
     }
 
     @PostMapping("/modify2")
@@ -144,7 +145,7 @@ public class DemoController {
                          @ModelAttribute(name = "age") Integer age,
                          @ModelAttribute(name = "phone") Integer phone){
 
-        ModelAndView mav = new ModelAndView("list");
+        ModelAndView mav = new ModelAndView("test1/list");
 
         try{
             System.out.print("기존 ID:" + id +"기존 name: "+name + "기존 age: "+age + "기존 phone: "+phone+"\n");
