@@ -1,0 +1,98 @@
+body{
+    background-color: #adc0b7;
+}
+#detailDiv, #form-div{
+    align-self: center;
+    background-color: #46A094;
+    border: 2px solid #46A094;
+}
+input{
+    width: 100%;
+}
+#memberPhoneThird, #memberPhoneSecond{
+    width: 100px;
+    text-align: center;
+}
+Button{
+    display: inline-block;
+    padding: 1.5em 2.6em;
+    border-radius: 0;
+    color: #b2876f;
+    margin-top:2rem;
+    font-weight: bold;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-decoration: none;
+    position: relative;
+    transition: all 250ms ease;
+}
+#contents{
+    width: 100%;
+}
+
+td, th{
+    border: 1px dotted #1f2029;
+    padding: 20px;
+    margin: 100px;
+}
+thead{
+    /*font-family: Impact, Charcoal, sans-serif;*/
+    border: 3px dotted #1f2029;
+}
+table{
+    border: 3px solid #1f2029;
+}
+.select{
+    background-color: #46A094;
+    border: 0.5px solid black;
+}
+
+.outMemberCodeNum, .outMemberID, .outMemberName, .outMemberPhone, .outMemberGender, .outMemberBirth{
+    font-size: 18px;
+    color: #333333;
+}
+
+div.paging{
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    margin-top: 20px;
+    justify-content: center;
+}
+
+div.paging>i,
+div.paging>div{
+    font-size: 20px;
+    margin: 0 10px;
+}
+
+div.paging>i,
+div.paging>div.pages>span{
+    margin: 0 3px;
+    cursor: pointer;
+}
+
+.pages>span{
+    font-size: 20px;
+    cursor: pointer;
+    margin: 10px;
+}
+
+span.active{
+    color: #b2876f;
+    font-weight: bold;
+}
+[type="radio"]{
+    margin-left: 27%;
+    vertical-align: middle;
+    appearance: none;
+    border: max(2px, 0.1em) solid gray;
+    border-radius: 50%;
+    width: 1.25em;
+    height: 1.25em;
+    transition: border 0.5s ease-in-out;
+}
+[type="radio"]:checked{
+    border: 0.4em solid tomato;
+}
