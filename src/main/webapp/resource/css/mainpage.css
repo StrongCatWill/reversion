@@ -9,7 +9,7 @@ body{
 input{
     width: 100%;
 }
-#memberPhoneThird, #memberPhoneSecond{
+#memberPhoneThird, #memberPhoneSecond, #UpdateMemberPhoneSecond, #UpdateMemberPhoneThird{
     width: 100px;
     text-align: center;
 }

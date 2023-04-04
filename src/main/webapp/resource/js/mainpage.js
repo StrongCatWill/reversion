@@ -281,7 +281,7 @@
         //update할 때, memberCodeNum을 PK로 잡고 들어가서 수정하는데, 그게 안 넘어가서 SQL 에러가 나는 것 같음
         let updateID = $("#updateID").val().trim();
         let updateName = $("#updateName").val().trim();
-        let updatePhone = $("#updatePhone").val().trim();
+        let updatePhone = $("select[id=UpdateMemberPhoneFirst]").val()+$("#UpdateMemberPhoneSecond").val().trim()+$("#UpdateMemberPhoneThird").val().trim();
 
         //로직 검사에 쓸 데이터
         let data = {
@@ -422,9 +422,11 @@
         function initAddForm(){
         $("#memberID").val(null);
         $("#memberName").val(null);
-        $("#memberPhone").val(null);
         $("#memberGender").val(null);
         $("#memberBirth").val(null);
+        $("#memberPhoneSecond").val(null);
+        $("#memberPhoneThird").val(null);
+
 
         $("#form-div").hide();
         $("#goAddMamber").show();
@@ -435,7 +437,8 @@
 
         $("#updateID").val(null);
         $("#updateName").val(null);
-        $("#updatePhone").val(null);
+        $("#UpdateMemberPhoneSecond").val(null);
+        $("#UpdateMemberPhoneThird").val(null);
         $(".mode").val(null);
 
         $("#detailDiv").hide();

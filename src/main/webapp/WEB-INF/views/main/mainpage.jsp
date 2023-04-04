@@ -107,7 +107,23 @@
                 </tr>
                 <tr>
                     <td>수정할 전화번호 입력</td>
-                    <td class="update_input"><input type="text" id="updatePhone" size="100%" required></td>
+                    <td>
+                        <select name="memberPhone" id="UpdateMemberPhoneFirst">
+                            <option value="010" selected>010</option>
+                            <option value="011">011</option>
+                            <option value="012">012</option>
+                            <option value="013">013</option>
+                            <option value="014">014</option>
+                            <option value="015">015</option>
+                            <option value="017">017</option>
+                            <option value="018">018</option>
+                            <option value="019">019</option>
+                        </select>
+                        -
+                        <input type="text" name="memberPhone" id="UpdateMemberPhoneSecond" required width="100px">
+                        -
+                        <input type="text" name="memberPhone" id="UpdateMemberPhoneThird" required width="100px">
+                    </td>
                 </tr>
                 <tr>
                     <td>성별은 수정할 수 없습니다.</td>
@@ -163,7 +179,6 @@
                         -
                         <input type="text" name="memberPhone" id="memberPhoneThird" required width="100px">
                     </td>
-<%--                    <td><input type="text" id="memberPhone" required></td>--%>
                 </tr>
                 <tr>
                     <td>사용자의 성별 : </td>
