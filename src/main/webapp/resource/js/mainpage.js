@@ -29,6 +29,19 @@ let offset = Math.abs(globalCurrentPage-1)*dataPerPage;
 let limit = dataPerPage;
 
 
+// 데이트 피커 한국어에 맞게 최적화
+$.datepicker.setDefaults({
+    dateFormat: 'yy-mm-dd',
+    prevText: '이전 달',
+    nextText: '다음 달',
+    monthNames: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+    monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+    dayNames: ['일', '월', '화', '수', '목', '금', '토'],
+    dayNamesShort: ['일', '월', '화', '수', '목', '금', '토'],
+    dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'],
+    showMonthAfterYear: true,
+    yearSuffix: '년'
+});
 
 
 function MainList(dataPerPage, globalCurrentPage){
@@ -333,7 +346,8 @@ function MainList(dataPerPage, globalCurrentPage){
         memberName = $("#memberName").val();
         memberPhone = $("select[name=memberPhone]").val()+$("#memberPhoneSecond").val().trim()+$("#memberPhoneThird").val().trim();
         memberGender = $("input[name='memberGender']:checked").val();
-        memberBirth = $("#memberBirth").val();
+
+        memberBirth = $("#datepicker.hasDatepicker").val();
 
         // console.log(memberID, memberName, memberPhone, memberGender, memberBirth);
 
@@ -424,7 +438,7 @@ function MainList(dataPerPage, globalCurrentPage){
         $("#memberID").val(null);
         $("#memberName").val(null);
         $("#memberGender").val(null);
-        $("#memberBirth").val(null);
+        $("#datepicker.hasDatepicker").val(null);
         $("#memberPhoneSecond").val(null);
         $("#memberPhoneThird").val(null);
 
