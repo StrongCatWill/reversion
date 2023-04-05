@@ -6,8 +6,9 @@
 <head>
     <title>ajax refactoring</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <script src="https://kit.fontawesome.com/3653c6eb7b.js" crossorigin="anonymous"></script>
     <link href="${path}/resource/css/mainpage.css" type="text/css" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/3653c6eb7b.js" crossorigin="anonymous"></script>
+
 </head>
 <body>
 <h1 align="center">Member List Table</h1><br><br>
@@ -17,14 +18,14 @@
     <div id="tableDiv">
         <table id="listTable" width="70%">
             <thead>
-                <tr>
+            <tr>
                 <th>memberCodeNum</th>
                 <th>memberID</th>
                 <th>memberName</th>
                 <th>memberPhone</th>
                 <th>memberGender</th>
                 <th>memberBirth</th>
-                </tr>
+            </tr>
             </thead>
             <tbody id="tbody" class="test">
             </tbody>
@@ -138,20 +139,20 @@
         </form>
 
 
-        <button type="button" id="toUpdateMemberBtn">수정</button>
-        <button type="button" id="submitUpdate">수정</button>
-        <button type="button" id="DeleteMemberBtn">선택한 사용자 삭제</button>
-        <button type="button" id="closeDetailDiv">창 닫기</button><br><br>
-        <br><br>
-    </div>
+            <button type="button" id="toUpdateMemberBtn">수정</button>
+            <button type="button" id="submitUpdate">수정</button>
+            <button type="button" id="DeleteMemberBtn">선택한 사용자 삭제</button>
+            <button type="button" id="closeDetailDiv">창 닫기</button><br><br>
+            <br><br>
+        </div>
 
 
-    <div id="form-div">
-        <h5>새 사용자 정보 입력</h5>
-        <h6>각각 폼에 맞는 정보를 입력하세요.</h6><br>
-        <hr>
-        <table width="70%" border="1">
-            <thead>
+        <div id="form-div">
+            <h5>새 사용자 정보 입력</h5>
+            <h6>각각 폼에 맞는 정보를 입력하세요.</h6><br>
+            <hr>
+            <table width="70%" border="1">
+                <thead>
                 <tr>
                     <td>사용자의 ID : </td>
                     <td><input type="text" id="memberID" required></td>
@@ -189,26 +190,25 @@
                 </tr>
                 <tr>
                     <td>사용자의 생일 : </td>
-                    <td><input type="text" id="memberBirth" placeholder="YYYY-MM-DD" required></td>
+                    <td><input type="text" id="datepicker"></td>
                 </tr>
-            </thead>
-        </table>
-        <div id="buttonDiv">
-            <button type="submit" onclick="" value="저장" id="saveMember">저장</button>
-            <button type="reset" id="resetBtn">저장하지 않고 창 닫기</button>
+                </thead>
+            </table>
+            <div id="buttonDiv">
+                <button type="submit" onclick="" value="저장" id="saveMember">저장</button>
+                <button type="reset" id="resetBtn">저장하지 않고 창 닫기</button>
+            </div>
+            <br>
         </div>
-        <br>
-    </div>
 
-    <hr>
-    <button type="button" id="goAddMamber">
-        addMember
-    </button>
-    <br><br><br>
-</div>
-
-
-<script src="https://code.jquery.com/jquery-3.6.3.js" integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
+        <hr>
+        <button type="button" id="goAddMamber">
+            addMember
+        </button>
+        <br><br><br>
+        </div>
+    </body>
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+<script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js" integrity="sha256-6XMVI0zB8cRzfZjqKcD01PBsAy3FlDASrlC8SxCpInY=" crossorigin="anonymous"></script>
 <script src="${path}/resource/js/mainpage.js"></script>
-</body>
 </html>

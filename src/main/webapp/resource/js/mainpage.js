@@ -1,5 +1,5 @@
 
-    $(function() {
+$(function() {
     initMember();
     $("#tbody").empty();
     $("#pages").empty();
@@ -7,30 +7,31 @@
     $("#form-div").hide();
     $("#detailDiv").hide();
     $("#updateForm").hide();
+    $("#datepicker").datepicker();
 });
 
-    //------------------------전역변수 구역-----------------
-    //delete와 update를 사용하기 위해서는 같은 변수가 여러번 사용된다. 먼저 전역변수로 선언해주고, 재할당해서 사용하기로 했다.
-    //재할당하는 거니까, 검사 철저하게 해주기.
-    let memberCodeNum = null;
-    let memberID = null;
-    let memberName = null;
-    let memberPhone = null;
-    let memberGender = null;
-    let memberBirth = null;
+//------------------------전역변수 구역-----------------
+//delete와 update를 사용하기 위해서는 같은 변수가 여러번 사용된다. 먼저 전역변수로 선언해주고, 재할당해서 사용하기로 했다.
+//재할당하는 거니까, 검사 철저하게 해주기.
+let memberCodeNum = null;
+let memberID = null;
+let memberName = null;
+let memberPhone = null;
+let memberGender = null;
+let memberBirth = null;
 
-    let totalData;                  //총 데이터 수, Mainlist에서 구해져서 떨어짐.(totalData.length로 써야 함.)
-    let dataPerPage = $("select[name=dataPerPage]").val();      //한 페이지에 나타낼 멤버 row 수, 기본값으로 설정함.
-    let pageCount;                  //페이징에 나타낼 페이지 수
-    let globalCurrentPage =1;       //현재 페이지
+let totalData;                  //총 데이터 수, Mainlist에서 구해져서 떨어짐.(totalData.length로 써야 함.)
+let dataPerPage = $("select[name=dataPerPage]").val();      //한 페이지에 나타낼 멤버 row 수, 기본값으로 설정함.
+let pageCount;                  //페이징에 나타낼 페이지 수
+let globalCurrentPage =1;       //현재 페이지
 
-    let offset = Math.abs(globalCurrentPage-1)*dataPerPage;
-    let limit = dataPerPage;
-
-
+let offset = Math.abs(globalCurrentPage-1)*dataPerPage;
+let limit = dataPerPage;
 
 
-    function MainList(dataPerPage, globalCurrentPage){
+
+
+function MainList(dataPerPage, globalCurrentPage){
 
 
     $("#tbody").empty();
@@ -45,122 +46,122 @@
     //전체 데이터를 불러오려고 만든 ajax get call
     $.ajax({
 
-    url:"./main/whole",
-    type:"get",
-    dataType:"json",
-    //전체 데이터 불러오는 ajax call
-    success:function(result){
+        url:"./main/whole",
+        type:"get",
+        dataType:"json",
+        //전체 데이터 불러오는 ajax call
+        success:function(result){
 
 
-    //페이징 처리를 위한 전체 데이터 값 반환
-    totalData = Math.abs(result.length);
-    pageCount = totalData/dataPerPage;
+            //페이징 처리를 위한 전체 데이터 값 반환
+            totalData = Math.abs(result.length);
+            pageCount = totalData/dataPerPage;
 
-    //2로 시작해야 append 될 때 1부터 그려짐
-    let PagingIndex = 2;
+            //2로 시작해야 append 될 때 1부터 그려짐
+            let PagingIndex = 2;
 
-    //전체 데이터 길이를 한 페이지당 데이터 수로 나눈 값이 0일 때, PagingIndex는 1~몫까지 생성되어야 함.
-    if((pageCount)===0){
+            //전체 데이터 길이를 한 페이지당 데이터 수로 나눈 값이 0일 때, PagingIndex는 1~몫까지 생성되어야 함.
+            if((pageCount)===0){
 
-    for(PagingIndex; PagingIndex<pageCount+1; PagingIndex++){
-    let $pagesNum = $("<span> "+(PagingIndex-1)+" </span>");
-    $("#pages").append($pagesNum);
-}
-    //전체 데이터 길이를 한 페이지당 데이터 수로 나눈 값이 0이 아닐 때 PagingIndex는 1~몫+1까지 생성되어야 함.
-}else{
-    for(PagingIndex; PagingIndex<pageCount+2;PagingIndex++){
-    let $pagesNum = $("<span> "+(PagingIndex-1)+" </span>");
-    $("#pages").append($pagesNum);
-}   //for문 end
-}   //else문 end
+                for(PagingIndex; PagingIndex<pageCount+1; PagingIndex++){
+                    let $pagesNum = $("<span> "+(PagingIndex-1)+" </span>");
+                    $("#pages").append($pagesNum);
+                }
+                //전체 데이터 길이를 한 페이지당 데이터 수로 나눈 값이 0이 아닐 때 PagingIndex는 1~몫+1까지 생성되어야 함.
+            }else{
+                for(PagingIndex; PagingIndex<pageCount+2;PagingIndex++){
+                    let $pagesNum = $("<span> "+(PagingIndex-1)+" </span>");
+                    $("#pages").append($pagesNum);
+                }   //for문 end
+            }   //else문 end
 
 
-    //현재 페이지에 css가 들어있는 Class 주기
-    $("#pages span").removeClass("active");
-    $TargetIndex = $("#pages span").eq(globalCurrentPage-1);
-    $TargetIndex.addClass("active");
-    return [totalData, pageCount];
+            //현재 페이지에 css가 들어있는 Class 주기
+            $("#pages span").removeClass("active");
+            $TargetIndex = $("#pages span").eq(globalCurrentPage-1);
+            $TargetIndex.addClass("active");
+            return [totalData, pageCount];
 
-},  //whole url success end
-    error:function(error){
-    alert("failed whole url loading");
-}
-}); //whole url ajax call end
+        },  //whole url success end
+        error:function(error){
+            alert("failed whole url loading");
+        }
+    }); //whole url ajax call end
 
     $.ajax({
 
-    url:"/main/list",
-    type:"get",
-    dataType:"json",
-    data : {
-    "limit" : dataPerPage,
-    "offset" : Math.abs(globalCurrentPage-1)*dataPerPage
-},
+        url:"/main/list",
+        type:"get",
+        dataType:"json",
+        data : {
+            "limit" : dataPerPage,
+            "offset" : Math.abs(globalCurrentPage-1)*dataPerPage
+        },
 
-    success:function(success){
+        success:function(success){
 
 
-    $.each(success, function(index, item){
+            $.each(success, function(index, item){
 
-    let tr = $('<tr/>', {
-    class : 'target',
-});
+                let tr = $('<tr/>', {
+                    class : 'target',
+                });
 
-    let td_memberCodeNum =$('<td/>',{
-    text : item.memberCodeNum,
-});
+                let td_memberCodeNum =$('<td/>',{
+                    text : item.memberCodeNum,
+                });
 
-    let td_memberID =$('<td/>',{
-    text : item.memberID,
-});
+                let td_memberID =$('<td/>',{
+                    text : item.memberID,
+                });
 
-    let td_memberName =$('<td/>',{
-    text : item.memberName,
-});
+                let td_memberName =$('<td/>',{
+                    text : item.memberName,
+                });
 
-    let td_memberPhone =$('<td/>',{
-    text : item.memberPhone,
-});
+                let td_memberPhone =$('<td/>',{
+                    text : item.memberPhone,
+                });
 
-    let td_memberGender =$('<td/>',{
-    text : item.memberGender,
-});
+                let td_memberGender =$('<td/>',{
+                    text : item.memberGender,
+                });
 
-    let td_memberBirth =$('<td/>',{
-    text : item.memberBirth,
-});
+                let td_memberBirth =$('<td/>',{
+                    text : item.memberBirth,
+                });
 
-    tr.append(td_memberCodeNum);
-    tr.append(td_memberID);
-    tr.append(td_memberName);
-    tr.append(td_memberPhone);
-    tr.append(td_memberGender);
-    tr.append(td_memberBirth);
+                tr.append(td_memberCodeNum);
+                tr.append(td_memberID);
+                tr.append(td_memberName);
+                tr.append(td_memberPhone);
+                tr.append(td_memberGender);
+                tr.append(td_memberBirth);
 
-    $('#tbody').append(tr);
+                $('#tbody').append(tr);
 
-}); //each문 끝
-}   //pagination success end
-})  //main url ajax call end
+            }); //each문 끝
+        }   //pagination success end
+    })  //main url ajax call end
 }   //mainlist function end
 
 
 
-    // crud 영역
-    {
-        $(document).on("mouseenter", ".target", function(){
-            $(this).addClass("select");
-        });
+// crud 영역
+{
+    $(document).on("mouseenter", ".target", function(){
+        $(this).addClass("select");
+    });
 
-        $(document).on("mouseleave", ".select", function(){
+    $(document).on("mouseleave", ".select", function(){
         $(this).removeClass("select");
     });
 
 
 
-        //선택된 값을 가지고 update를 하는 것.
+    //선택된 값을 가지고 update를 하는 것.
 
-        $(document).on("click", ".select", function(){
+    $(document).on("click", ".select", function(){
 
         $("#resetBtn").trigger("click");
 
@@ -183,8 +184,8 @@
         $("#submitUpdate").hide();
     });
 
-        //detailFrom을 닫고 update 폼을 여는 기능임. 선택한 멤버의 정보를 넘겨주는 것이 중요하다.
-        $("#toUpdateMemberBtn").click(function(){
+    //detailFrom을 닫고 update 폼을 여는 기능임. 선택한 멤버의 정보를 넘겨주는 것이 중요하다.
+    $("#toUpdateMemberBtn").click(function(){
 
         // switchUpdateForm();
         $("#detailForm").hide();
@@ -202,31 +203,31 @@
 
         //같은 updateMember 버튼을 쓰고 있었다. 같은 버튼에서 기능을 가르는 방법으로 만든 분기문.
         if( $(".mode").val() === null ){
-        $(".mode").val(" A ");
-    }else{
-        //수정하기 버튼 보여주고
-        $("#submitUpdate").show();
+            $(".mode").val(" A ");
+        }else{
+            //수정하기 버튼 보여주고
+            $("#submitUpdate").show();
 
-        $("#toUpdateMemberBtn").hide();
+            $("#toUpdateMemberBtn").hide();
 
-        //수정 버튼을 눌렀을 때 수정 진행
-        $("#submitUpdate").click(function(){
+            //수정 버튼을 눌렀을 때 수정 진행
+            $("#submitUpdate").click(function(){
 
-        updateMember(memberCodeNum, memberID, memberName, memberPhone);
+                updateMember(memberCodeNum, memberID, memberName, memberPhone);
 
-        if($(".select").click){
-        $("#submitUpdate").hide();
-        $("#toUpdateMemberBtn").show();
+                if($(".select").click){
+                    $("#submitUpdate").hide();
+                    $("#toUpdateMemberBtn").show();
 
-        $("#detailDiv").hide();
-        initDetailAndUpdate();
-    }
-    })
-    }
+                    $("#detailDiv").hide();
+                    initDetailAndUpdate();
+                }
+            })
+        }
     });
 
 
-        $("#DeleteMemberBtn").click(function(){
+    $("#DeleteMemberBtn").click(function(){
 
         initMember();
         memberCodeNum = $("#outMemberCodeNum").text();
@@ -236,7 +237,7 @@
     });
 
 
-        $("#closeDetailDiv").click(function(){
+    $("#closeDetailDiv").click(function(){
 
         $("#toUpdateMemberBtn").show();
         $("#goAddMamber").show();
@@ -246,15 +247,15 @@
 
     });
 
-        $("#goAddMamber").click(function(){
+    $("#goAddMamber").click(function(){
 
         $("#form-div").show();
         $("#goAddMamber").hide();
 
     });
 
-        //클릭한 멤버 값 받아서 detail 창에 띄워주는 기능. ajax call X
-        function getDetail(memberCodeNum, memberID, memberName, memberPhone, memberGender, memberBirth){
+    //클릭한 멤버 값 받아서 detail 창에 띄워주는 기능. ajax call X
+    function getDetail(memberCodeNum, memberID, memberName, memberPhone, memberGender, memberBirth){
 
         initMember();
 
@@ -269,8 +270,8 @@
     }
 
 
-        //getDetail 후, 수정 눌렀을 때 ajax 콜, 컨트롤러 처리를 위한 함수.
-        function updateMember(memberCodeNum, memberID, memberName, memberPhone){
+    //getDetail 후, 수정 눌렀을 때 ajax 콜, 컨트롤러 처리를 위한 함수.
+    function updateMember(memberCodeNum, memberID, memberName, memberPhone){
 
         memberName =  $(".outMemberName").text();
 
@@ -285,46 +286,46 @@
 
         //로직 검사에 쓸 데이터
         let data = {
-        "memberCodeNum" : memberCodeNum,
-        "memberID" : (updateID!=null) ? updateID : preID,
-        "memberName" : (updateName!=null) ? updateName : preName,
-        "memberPhone" : (updatePhone!=null) ? updatePhone
-        :(updatePhone.length()!=11) ? updatePhone : alert("11자리 전화번호 입력하세요. ")
-    }
+            "memberCodeNum" : memberCodeNum,
+            "memberID" : (updateID!=null) ? updateID : preID,
+            "memberName" : (updateName!=null) ? updateName : preName,
+            "memberPhone" : (updatePhone!=null) ? updatePhone
+                :(updatePhone.length()!=11) ? updatePhone : alert("11자리 전화번호 입력하세요. ")
+        }
 
         $.ajax({
-        url:"/main/update",
-        type:"post",
-        data: JSON.stringify(data),
-        dataType:"json",
-        contentType:"application/json",
-        async : false,
+            url:"/main/update",
+            type:"post",
+            data: JSON.stringify(data),
+            dataType:"json",
+            contentType:"application/json",
+            async : false,
 
-        success :function(data, response){
+            success :function(data, response){
 
-        $("#detailDiv").hide();
-        $(".mode").val(null);
+                $("#detailDiv").hide();
+                $(".mode").val(null);
 
-        $("#detailTable").show();
-        $("#updateForm").hide();
+                $("#detailTable").show();
+                $("#updateForm").hide();
 
-        $("#tbody").empty();
-        MainList(dataPerPage, globalCurrentPage);
+                $("#tbody").empty();
+                MainList(dataPerPage, globalCurrentPage);
 
-        initMember();
-        initUpdate();
-        initDetailAndUpdate();
+                initMember();
+                initUpdate();
+                initDetailAndUpdate();
+            }
+        })
     }
-    })
-    }
 
 
-        $("#resetBtn").click(function(){
+    $("#resetBtn").click(function(){
         initAddForm();
     })
 
-        //create member용
-        $("#saveMember").click(function(){
+    //create member용
+    $("#saveMember").click(function(){
 
         $("#form-div").hide();
 
@@ -337,38 +338,38 @@
         // console.log(memberID, memberName, memberPhone, memberGender, memberBirth);
 
         let data = {
-        "memberID" : memberID,
-        "memberName" : memberName,
-        "memberPhone" : memberPhone,
-        "memberGender" : memberGender,
-        "memberBirth" :memberBirth
-    }
+            "memberID" : memberID,
+            "memberName" : memberName,
+            "memberPhone" : memberPhone,
+            "memberGender" : memberGender,
+            "memberBirth" :memberBirth
+        }
 
 
         $.ajax({
-        url:"/main/add",
-        type:"post",
-        data: JSON.stringify(data),
-        dataType:"json",
-        contentType:"application/json",
-        success :function(data){
+            url:"/main/add",
+            type:"post",
+            data: JSON.stringify(data),
+            dataType:"json",
+            contentType:"application/json",
+            success :function(data){
 
-        initAddForm();
-        $("#last_page").trigger("click");
-        $("#detailForm").hide();
-    },
-        error:function(error){
-        alert('에러 발생 :: '+error);
+                initAddForm();
+                $("#last_page").trigger("click");
+                $("#detailForm").hide();
+            },
+            error:function(error){
+                alert('에러 발생 :: '+error);
+
+                $("#form-div").hide();
+                initAddForm();
+            }
+        });
 
         $("#form-div").hide();
-        initAddForm();
-    }
     });
 
-        $("#form-div").hide();
-    });
-
-        function deleteMemberConfirm(){
+    function deleteMemberConfirm(){
 
         memberCodeNum = $(".outMemberCodeNum").text();
         memberName = $(".outMemberName").text();
@@ -376,50 +377,50 @@
         let DeleteConfirm = confirm(memberName+" 사용자를 삭제하시겠습니까?");
 
         if(DeleteConfirm==true){
-        alert(memberName+"사용자 삭제 진행");
-        deleteMember(memberCodeNum);
-    }else{
-        alert("취소.");
-    }
+            alert(memberName+"사용자 삭제 진행");
+            deleteMember(memberCodeNum);
+        }else{
+            alert("취소.");
+        }
         $("closeDetailDiv").trigger("click");
     }
 
-        function deleteMember(memberCodeNum){
+    function deleteMember(memberCodeNum){
 
         let data = {
-        "memberCodeNum" : memberCodeNum,
-    }
+            "memberCodeNum" : memberCodeNum,
+        }
 
         $.ajax({
 
-        url:"/main/delete",
-        type:"post",
-        //data01은 text타입으로 들어왔다.
-        data:JSON.stringify(data),
-        dataType:"json",
-        contentType:"application/json",
+            url:"/main/delete",
+            type:"post",
+            //data01은 text타입으로 들어왔다.
+            data:JSON.stringify(data),
+            dataType:"json",
+            contentType:"application/json",
 
-        success :function(data){
-        data = null;
-        initMember();
+            success :function(data){
+                data = null;
+                initMember();
 
-        MainList(dataPerPage, globalCurrentPage);
+                MainList(dataPerPage, globalCurrentPage);
 
-        initUpdate();
-        initDetailAndUpdate();
-        $("#goAddMamber").show();
-    },error:function(data, error){
+                initUpdate();
+                initDetailAndUpdate();
+                $("#goAddMamber").show();
+            },error:function(data, error){
 
-        alert('에러 발생 :: '+error + "넘어온 데이터 확인 " + data.memberID);
-        $("#form-div").hide();
-    }
-    })
+                alert('에러 발생 :: '+error + "넘어온 데이터 확인 " + data.memberID);
+                $("#form-div").hide();
+            }
+        })
         $("closeDetailDiv").trigger("click");
     }
 
-        //-------------------------init 구역-----------------------------------------------------
-        //add 창에서 저장하거나, 저장하지 않을 때 폼의 input 태그 내 입력값을 지우고 form div를 지우는 함수
-        function initAddForm(){
+    //-------------------------init 구역-----------------------------------------------------
+    //add 창에서 저장하거나, 저장하지 않을 때 폼의 input 태그 내 입력값을 지우고 form div를 지우는 함수
+    function initAddForm(){
         $("#memberID").val(null);
         $("#memberName").val(null);
         $("#memberGender").val(null);
@@ -432,7 +433,7 @@
         $("#goAddMamber").show();
     }
 
-        function initUpdate(){
+    function initUpdate(){
         //입력되어있던 input값 지워주기.
 
         $("#updateID").val(null);
@@ -445,13 +446,13 @@
         $("#goAddMamber").show();
     }
 
-        function initDetailAndUpdate(){
+    function initDetailAndUpdate(){
         $("#updateForm").hide();
         $("#detailForm").show();
     }
 
 
-        function initMember(){
+    function initMember(){
         memberCodeNum = null;
         memberID = null;
         memberName = null;
@@ -459,26 +460,26 @@
         memberGender = null;
         memberBirth = null;
     }
-    }
+}
 
 
-    // -----------------------------------------paging 구역-------------------------------------------------------------
-    {
-        //동적으로 생성된 #pages Div 안의 <span>에 이벤트 걸기. -----------> globalCurrentPage 변경됨. 이걸 trigger 할 수만 있으면 좋은데,, this를 어떻게 지정하지?
-        $("#pages").on("click", "span", function(){
+// -----------------------------------------paging 구역-------------------------------------------------------------
+{
+    //동적으로 생성된 #pages Div 안의 <span>에 이벤트 걸기. -----------> globalCurrentPage 변경됨. 이걸 trigger 할 수만 있으면 좋은데,, this를 어떻게 지정하지?
+    $("#pages").on("click", "span", function(){
 
-            $("#resetBtn").trigger("click");
+        $("#resetBtn").trigger("click");
 
-            globalCurrentPage = $(this).text().trim()*1;
+        globalCurrentPage = $(this).text().trim()*1;
 
-            MainList(dataPerPage, globalCurrentPage);
+        MainList(dataPerPage, globalCurrentPage);
 
-            lastIndex = $("#pages").children().last().text().trim()*1;
+        lastIndex = $("#pages").children().last().text().trim()*1;
 
-        });
+    });
 
-        //한 페이지당 몇 row까지 표시할 건지 select 태그에서 변경되는 값을 잡는 getPageIndexNum
-        $("select[name=dataPerPage]").change(function getPageIndexNum(){
+    //한 페이지당 몇 row까지 표시할 건지 select 태그에서 변경되는 값을 잡는 getPageIndexNum
+    $("select[name=dataPerPage]").change(function getPageIndexNum(){
 
         $("#resetBtn").trigger("click");
 
@@ -488,54 +489,54 @@
         MainList(dataPerPage, globalCurrentPage);
     });
 
-        // 버튼 클릭으로 페이지 이동 구역
+    // 버튼 클릭으로 페이지 이동 구역
     {
         //이전 페이지로 이동
         $("#prev_page").click(function(){
 
-        $("#resetBtn").trigger("click");
+            $("#resetBtn").trigger("click");
 
-        globalCurrentPage--;
+            globalCurrentPage--;
 
-        if(globalCurrentPage<1){
-        alert("Can't move previous page. This is the start of pages");
-        globalCurrentPage = 1;
-    }else{
-        MainList(dataPerPage, globalCurrentPage);
-    }
-    });
+            if(globalCurrentPage<1){
+                alert("Can't move previous page. This is the start of pages");
+                globalCurrentPage = 1;
+            }else{
+                MainList(dataPerPage, globalCurrentPage);
+            }
+        });
 
         // 다음 페이지로 이동
         $("#next_page").click(function(){
 
-        $("#resetBtn").trigger("click");
+            $("#resetBtn").trigger("click");
 
-        globalCurrentPage++;
-        let lastIndex = $("#pages").children().last().text().trim()*1;
+            globalCurrentPage++;
+            let lastIndex = $("#pages").children().last().text().trim()*1;
 
-        if(globalCurrentPage > lastIndex){
-        globalCurrentPage = lastIndex;
-        alert("Can't move next page. This is the end of pages");
-    }else{
-        MainList(dataPerPage, globalCurrentPage);
-    }
-    });
+            if(globalCurrentPage > lastIndex){
+                globalCurrentPage = lastIndex;
+                alert("Can't move next page. This is the end of pages");
+            }else{
+                MainList(dataPerPage, globalCurrentPage);
+            }
+        });
 
         //첫번째 페이지로 이동
         $("#first_page").click(function (){
-        $("#resetBtn").trigger("click");
-        MainList(dataPerPage, 1);
-    });
+            $("#resetBtn").trigger("click");
+            MainList(dataPerPage, 1);
+        });
 
 
         //마지막 페이지로 이동
         $("#last_page").click(function(){
 
-        $("#resetBtn").trigger("click");
-        lastIndex = $("#pages span").last().text().trim()*1;
-        globalCurrentPage = lastIndex;
-        MainList(dataPerPage, globalCurrentPage);
+            $("#resetBtn").trigger("click");
+            lastIndex = $("#pages span").last().text().trim()*1;
+            globalCurrentPage = lastIndex;
+            MainList(dataPerPage, globalCurrentPage);
 
-    });
+        });
     }// 버튼 클릭으로 페이지 이동 구역 끝
-     }
+}
